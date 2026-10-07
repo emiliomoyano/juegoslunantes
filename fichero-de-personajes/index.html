@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fichero de personajes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,600&family=Alegreya+Sans+SC:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+:root{
+  --ground:#E4E8E2; --card:#FBFBF6; --ink:#1C2429; --muted:#5D6A65;
+  --accent:#27508C; --accent-ink:#FFFFFF; --rule:#D3DEEC; --red:#B8433A;
+  --soft:#EEF1EC; --line:#D5DBD5; --write:#1F3F73;
+  --serif:"Alegreya", Georgia, "Times New Roman", serif;
+  --caps:"Alegreya Sans SC", "Gill Sans", "Trebuchet MS", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#121618; --card:#1C2226; --ink:#E6EAE4; --muted:#9BA7A2;
+    --accent:#8FB0E8; --accent-ink:#0E1620; --rule:#2A3640; --red:#D8766B;
+    --soft:#232A2E; --line:#313A3F; --write:#B9CEF2;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#121618; --card:#1C2226; --ink:#E6EAE4; --muted:#9BA7A2;
+  --accent:#8FB0E8; --accent-ink:#0E1620; --rule:#2A3640; --red:#D8766B;
+  --soft:#232A2E; --line:#313A3F; --write:#B9CEF2;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.5}
+.wrap{max-width:820px;margin:0 auto;padding-inline:16px;padding-block:28px 56px;display:flex;flex-direction:column;gap:22px}
+
+/* Cabecera */
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:14px 24px}
+.top h1{font-weight:700;font-size:1.8rem;line-height:1.1;margin:0;text-wrap:balance}
+.top p{margin:.35rem 0 0;color:var(--muted);font-size:.97rem;max-width:44ch}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px}
+.group{display:flex;flex-direction:column;gap:6px}
+.glabel{font-family:var(--caps);font-weight:700;font-size:.78rem;letter-spacing:.06em;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{font-size:.92rem;padding:4px 11px;border:1px solid var(--line);border-radius:999px;cursor:pointer;color:var(--ink);background:var(--card)}
+.seg input:checked + label{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.seg input:focus-visible + label{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Ficha */
+.ficha{background:var(--card);border-radius:4px;box-shadow:0 1px 0 var(--line),0 14px 34px -18px rgba(20,30,35,.35);position:relative;overflow:hidden}
+.ficha::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--red)}
+.stage{padding:24px 28px}
+.stage + .stage{border-top:2px solid var(--red)}
+@media (max-width:560px){.stage{padding:20px 18px}}
+.shead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.shead h2{font-family:var(--caps);font-weight:700;font-size:.95rem;letter-spacing:.08em;color:var(--accent);margin:0}
+.shead .note{font-size:.9rem;color:var(--muted);font-style:italic}
+.meta{font-family:var(--mono);font-size:.76rem;color:var(--muted)}
+
+/* Semillas */
+.seeds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:680px){.seeds{grid-template-columns:1fr}}
+.seed{border:1px solid var(--line);border-radius:6px;padding:12px 12px 12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--card)}
+.seed .sh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stamp{font-family:var(--caps);font-weight:700;font-size:.74rem;letter-spacing:.07em;color:var(--red);border:1.5px solid var(--red);border-radius:3px;padding:0 6px;transform:rotate(-2deg);display:inline-block}
+.seed .sv{font-size:1.08rem;line-height:1.35}
+.flash{animation:ink .45s ease-out}
+@keyframes ink{from{opacity:.15;filter:blur(2px)}to{opacity:1;filter:none}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}}
+
+.ib{all:unset;cursor:pointer;width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:6px;color:var(--muted)}
+.ib:hover{background:var(--soft);color:var(--ink)}
+.ib:focus-visible{outline:2px solid var(--accent)}
+.ib svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* Identidad */
+.ident{display:grid;grid-template-columns:1fr 150px;gap:12px}
+@media (max-width:560px){.ident{grid-template-columns:1fr}}
+.inp{display:flex;flex-direction:column;gap:4px}
+.inp .irow{display:flex;gap:6px;align-items:end}
+.inp input{flex:1;min-width:0;font:inherit;font-size:1.35rem;font-style:italic;color:var(--write);background:transparent;border:0;border-bottom:1.5px solid var(--line);padding:2px 2px 4px;outline:none}
+.inp input:focus{border-bottom-color:var(--accent)}
+.inp input::placeholder{color:var(--muted);opacity:.6}
+.linkbtn{all:unset;cursor:pointer;font-family:var(--caps);font-size:.8rem;letter-spacing:.05em;color:var(--accent);padding:4px 2px;white-space:nowrap}
+.linkbtn:hover{text-decoration:underline}
+.linkbtn:focus-visible{outline:2px solid var(--accent)}
+
+/* Preguntas */
+.progress{display:flex;align-items:center;gap:10px}
+.bar{width:120px;height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.qs{display:flex;flex-direction:column;gap:20px}
+.q{display:flex;flex-direction:column;gap:4px}
+.qh{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:start}
+.qn{font-family:var(--mono);font-size:.78rem;color:var(--muted);padding-top:4px;font-variant-numeric:tabular-nums}
+.qc{font-family:var(--caps);font-size:.76rem;letter-spacing:.06em;color:var(--muted);display:block}
+.qt{font-weight:500;font-size:1.06rem;line-height:1.4}
+.qt .sd{background:var(--soft);border-bottom:1.5px solid var(--red);padding:0 2px}
+.qacts{display:flex}
+.q textarea{font:inherit;font-size:1.05rem;color:var(--write);width:100%;min-height:64px;resize:vertical;border:0;outline:none;padding:4px 2px 0 30px;line-height:32px;background:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--rule) 31px,var(--rule) 32px);field-sizing:content}
+.q textarea:focus{background-color:var(--soft)}
+.q textarea::placeholder{color:var(--muted);opacity:.55;font-style:italic}
+.addq{align-self:flex-start}
+.btn-line{font-family:var(--serif);font-size:.95rem;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 14px;cursor:pointer}
+.btn-line:hover{border-color:var(--ink)}
+.btn-line:focus-visible,.btn-main:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn-main{font-family:var(--caps);font-weight:700;font-size:1rem;letter-spacing:.05em;background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:11px 18px;cursor:pointer}
+.btn-main:hover{filter:brightness(1.08)}
+.btn-danger{border-color:var(--red);color:var(--red)}
+
+/* Escena */
+.escena{background:var(--soft);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:14px 16px;display:flex;gap:10px;align-items:start;justify-content:space-between}
+.escena p{margin:0;font-size:1.1rem;font-style:italic}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.toast{font-family:var(--caps);font-size:.85rem;color:var(--accent);letter-spacing:.04em;min-height:1.2em}
+.foot{font-size:.88rem;color:var(--muted);margin:0 4px}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Fichero de personajes</h1>
+      <p>El azar pone tres semillas. Vos escribís quién es la persona que las junta.</p>
+    </div>
+    <div class="controls">
+      <div class="group">
+        <span class="glabel" id="lg-reg">Registro</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lg-reg">
+          <input type="radio" name="reg" id="reg-X" value="X" checked><label for="reg-X">Mezcla</label>
+          <input type="radio" name="reg" id="reg-R" value="R"><label for="reg-R">Realista</label>
+          <input type="radio" name="reg" id="reg-P" value="P"><label for="reg-P">Policial</label>
+          <input type="radio" name="reg" id="reg-F" value="F"><label for="reg-F">Fantástico</label>
+          <input type="radio" name="reg" id="reg-H" value="H"><label for="reg-H">Histórico</label>
+        </div>
+      </div>
+      <div class="group">
+        <span class="glabel" id="lg-gen">Personaje</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lg-gen">
+          <input type="radio" name="gen" id="gen-f" value="1"><label for="gen-f">Femenino</label>
+          <input type="radio" name="gen" id="gen-m" value="0"><label for="gen-m">Masculino</label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <article class="ficha" id="ficha">
+    <section class="stage">
+      <div class="shead"><h2>1 · Tres semillas</h2><span class="note">Tirá el dado sobre la que no te diga nada.</span></div>
+      <div class="seeds" id="seeds"></div>
+    </section>
+
+    <section class="stage">
+      <div class="shead"><h2>2 · Quién es</h2><span class="meta" id="fnum"></span></div>
+      <div class="ident">
+        <div class="inp">
+          <label class="glabel" for="in-nombre">Nombre</label>
+          <div class="irow"><input id="in-nombre" type="text" autocomplete="off" placeholder="Poné un nombre"><button class="linkbtn" id="sug-nombre" type="button">Sugerir</button></div>
+        </div>
+        <div class="inp">
+          <label class="glabel" for="in-edad">Edad</label>
+          <div class="irow"><input id="in-edad" type="text" autocomplete="off" placeholder="—"><button class="linkbtn" id="sug-edad" type="button">Sugerir</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage">
+      <div class="shead"><h2>3 · En tus palabras</h2>
+        <div class="progress"><span class="meta" id="prog-t"></span><span class="bar"><i id="prog-b"></i></span></div>
+      </div>
+      <div class="qs" id="qs"></div>
+      <div class="actions"><button class="btn-line addq" id="btn-addq" type="button">Otra pregunta</button></div>
+    </section>
+
+    <section class="stage">
+      <div class="shead"><h2>4 · Primera escena</h2></div>
+      <div class="escena"><p id="escena"></p><button class="ib" type="button" id="roll-esc" aria-label="Otra consigna" title="Otra consigna"></button></div>
+      <div class="actions">
+        <button class="btn-main" id="btn-copy" type="button">Copiar ficha</button>
+        <button class="btn-line" id="btn-new" type="button">Empezar otro personaje</button>
+        <span class="toast" id="toast" role="status" aria-live="polite"></span>
+      </div>
+    </section>
+  </article>
+  <p class="foot">Lo que escribís se guarda en este navegador mientras trabajás. Para conservarlo, copiá la ficha y pegala en tu documento.</p>
+</div>
+
+<script>
+/* {masc|fem} se resuelve según el género. Registros: R realista, P policial, F fantástico, H histórico; sin registro vale para todos. */
+const B={
+  nombresF:["Elena","Irene","Nora","Alba","Inés","Mercedes","Julia","Rosario","Delfina","Carmen","Lucía","Teresa","Amparo","Beatriz","Graciela","Olga","Paula","Soledad","Marta","Aurora","Clara","Eugenia","Adela","Virginia","Estela","Gloria","Ramona","Celeste","Matilde","Noemí","Ofelia","Lidia","Ana","Camila","Josefina","Sara"],
+  nombresM:["Dante","Mateo","Bruno","Tomás","Joaquín","Gabriel","Ernesto","Ramiro","Julián","Horacio","Aurelio","Federico","Nicanor","Esteban","Octavio","Leandro","Ismael","Benjamín","Ciro","Anselmo","Rodolfo","Fermín","Lisandro","Víctor","Andrés","Eliseo","Hugo","Raúl","Martín","Teodoro","Abel","Simón","Lautaro","Omar","Félix","Germán"],
+  apellidos:["Ferreyra","Olmos","Quiroga","Bustos","Sosa","Carrizo","Pereyra","Almada","Heredia","Villafañe","Arrieta","Ledesma","Rinaldi","Kowalski","Haddad","Ibarra","Zanetti","Molina","Cáceres","Ortiz","Barrionuevo","Luján","Etchegaray","Vidal","Montenegro","Sarmiento","Acosta","Paz","Brizuela","Nazar","Oviedo","Gallardo","Toledo","Rosales","Funes","Aguirre","Schmidt","Castellano","Leiva","Mercado"],
+  oficio:[
+    ["Cerrajer{o|a}","","m"],["Maestr{o|a} rural",""],["Afinador{|a} de pianos",""],["Sepulturer{o|a}","","m"],["Panader{o|a} de madrugada",""],["{Partero|Partera}",""],
+    ["Carnicer{o|a} de barrio",""],["Encuadernador{|a}",""],["Relojer{o|a} de barrio","","m"],["{Sastre|Modista}",""],["Pescador{|a} de río","","m"],["Organista de la catedral",""],
+    ["Cociner{o|a} de un hotel venido a menos",""],["Bibliotecari{o|a} de un pueblo chico",""],["Apicultor{|a}",""],["Curander{o|a}",""],["Emplead{o|a} del correo",""],
+    ["Titiriter{o|a} ambulante",""],["Vendedor{|a} de flores en la puerta del cementerio",""],["Enfermer{o|a} de guardia nocturna",""],["Tasador{|a} de antigüedades",""],
+    ["Corrector{|a} de pruebas en una imprenta",""],["Restaurador{|a} de imágenes religiosas",""],["Costurer{o|a} a domicilio","","f"],["Prestamista de barrio",""],
+    ["Taxidermista",""],["Encargad{o|a} de un edificio antiguo","","m"],["Afilador{|a} ambulante","","m"],["Vidrier{o|a}","","m"],["Pianista de un bar",""],
+    ["Fotógraf{o|a} de casamientos","R"],["Traductor{|a} de manuales técnicos","R"],["Repartidor{|a} en bicicleta","R"],["Operador{|a} de un call center","R"],
+    ["Guía de turismo en las sierras","R"],["Profesor{|a} de latín jubilad{o|a}","R"],["Cajer{o|a} de supermercado","R"],["Kinesiólog{o|a}","R"],
+    ["Veterinari{o|a} de campo","R"],["Psicopedagog{o|a} de una escuela","R"],["Profesor{|a} de danza","R"],["Encuestador{|a}","R"],["Guardaparques","R"],
+    ["Chofer de remís","RP"],["Encargad{o|a} de un hotel de paso","RP"],["Agente inmobiliari{o|a}","RP"],["Contador{|a} de una empresa familiar","RP"],
+    ["Camioner{o|a} de larga distancia","RP","m"],["Técnic{o|a} de ascensores","RP","m"],["Martiller{o|a}","RP"],["Guardia de seguridad de un shopping","RP"],["Farmacéutic{o|a} de turno","RP"],["Croupier de un casino","RP"],
+    ["Perit{o|a} calígraf{o|a}","P"],["Emplead{o|a} de la morgue judicial","P"],["Ex policía de la división robos","P"],["Periodista de policiales","P"],["Abogad{o|a} de oficio","P"],
+    ["Investigador{|a} de una compañía de seguros","P"],["Fiscal de instrucción","P"],["Secretari{o|a} de un juzgado penal","P"],["Perit{o|a} informátic{o|a}","P"],
+    ["Custodio de camiones de caudales","P"],["Guardiacárcel","P"],["Chofer de un funcionario","PR","m"],["Médic{o|a} forense","PH"],
+    ["Cartógraf{o|a} de territorios que cambian de lugar","F"],["{Guardián|Guardiana} de un faro que ya no alumbra","F"],["Relojer{o|a} que repara los relojes de los muertos","F"],
+    ["Bibliotecari{o|a} de libros que nadie escribió","F"],["Coleccionista de voces grabadas","F"],["Intérprete de los sueños de su pueblo","F"],["Vendedor{|a} de recuerdos usados","F"],
+    ["Afinador{|a} de las campanas que anuncian muertes","F"],["Traductor{|a} del idioma de los pájaros","F"],["Barquer{o|a} de un río que solo se cruza de noche","F"],
+    ["Custodi{o|a} de un museo de objetos perdidos","F"],["Médic{o|a} de muñecas antiguas","F"],["Cazador{|a} de ecos","F"],["Escriban{o|a} de pactos que no se pueden romper","F"],["Boticari{o|a} de pueblo","FH"],
+    ["Telegrafista de una estación de campaña","H"],["{Preceptor|Institutriz} de una familia terrateniente","H"],["Tipógraf{o|a} de un periódico anarquista","H"],["Fotógraf{o|a} ambulante","H"],
+    ["Maquinista de ferrocarril","H"],["Pulper{o|a}","H"],["Lavander{o|a} del arroyo","H","f"],["Arrier{o|a}","H","m"],["Lector{|a} en una fábrica de cigarros","H"],["Faroler{o|a}","H"],
+    ["Estibador{|a} del puerto","H","m"],["Maestr{o|a} normal recién recibid{o|a}","H"],["Telefonista de una central manual","H"],["Obrer{o|a} de un frigorífico","HR"],["Mayordom{o|a} de una estancia","H"],["Cantor{|a} de café concert","H"]
+  ],
+  objeto:[
+    ["un cuaderno de tapas duras con la mitad de las páginas arrancadas",""],["una llave que no abre ninguna puerta conocida",""],["una foto doblada en cuatro",""],
+    ["un encendedor, aunque no fuma",""],["un rosario de cuentas de madera",""],["una navaja con iniciales ajenas",""],["una carta sin abrir",""],["un reloj detenido a las 4:17",""],
+    ["una piedra lisa del río de su infancia",""],["un pañuelo bordado con un nombre que no es el suyo",""],["un anillo que le queda chico",""],["un mechón de pelo atado con hilo rojo",""],
+    ["un boleto de tren de ida, sin usar",""],["un dedal de plata",""],["una lupa de joyero",""],["el cortaplumas de su abuelo",""],["un peine de carey con un diente roto",""],
+    ["el llavero de un hotel que cerró hace años",""],["una receta médica a nombre de otra persona",""],["un botón de un abrigo que ya no tiene",""],["la estampita de un santo que nadie conoce",""],
+    ["un sobre con dinero que nunca cuenta",""],["un diccionario de bolsillo de un idioma que no habla",""],["una cinta métrica de costurera",""],["un silbato",""],["una tiza",""],
+    ["un recorte de diario amarillento",""],["un mapa dibujado a mano",""],["un muñeco de tela sin ojos",""],["una armónica",""],["un mazo de naipes españoles al que le falta el as de espadas",""],
+    ["un caramelo de menta que nunca se come",""],["un frasquito de perfume casi vacío",""],["una campanita de bronce",""],["una moneda de un país que ya no existe",""],
+    ["un grabador a casete","RP"],["un teléfono celular apagado que no es suyo","RP"],["un pendrive colgado del cuello","RP"],["una libreta con direcciones de gente muerta","PF"],
+    ["un revólver sin balas","PH"],["un casquillo de bala","PH"],["un tintero de viaje","H"],["un reloj de bolsillo sin agujas","FH"],
+    ["una brújula que apunta siempre hacia la casa donde nació","F"],["un frasco con tierra de un lugar que ya no existe","F"],["la pluma de un pájaro que no existe","F"],["un caracol que suena como una voz conocida","F"]
+  ],
+  secreto:[
+    ["Firma con el nombre de otra persona desde hace años.",""],["Sabe dónde está alguien a quien todos dan por muerto.",""],["Tiene una segunda familia en otra ciudad.",""],
+    ["Nunca terminó los estudios que dice haber terminado.","RP"],["Guarda dinero ajeno en una lata de galletitas.",""],["Escribe cartas anónimas a un vecino.",""],
+    ["Provocó el incendio del que todos l{o|a} creen víctima.",""],["Todavía ve a la persona que juró no volver a ver.",""],["No sabe leer bien y lo disimula desde hace años.",""],
+    ["Sabe desde los doce años que su padre no es su padre.",""],["Se quedó con algo que encontró en la casa de un muerto.",""],["Cambió de nombre cuando se mudó de provincia.",""],
+    ["Sigue pagando el alquiler de una casa en la que no vive nadie.","RP"],["Escribió el poema con el que otra persona se hizo conocida.",""],["Delató a un compañero cuando era joven.",""],
+    ["Visita cada jueves una tumba sin nombre.",""],["Nunca aprendió a nadar y dice que sí.",""],["Sabe quién rompió el vitral de la iglesia hace treinta años.",""],
+    ["Lleva un diario donde anota los errores de los demás.",""],["Tiene una deuda de juego que crece cada semana.","RP"],["Estuvo en la escena del crimen antes que la policía.","P"],
+    ["Trabaja como informante desde hace una década.","P"],["Cambió el testamento de su padre.","PH"],["Oye lo que sueñan quienes duermen cerca.","F"],["No proyecta sombra en las noches de luna llena.","F"],
+    ["Habla con su hermano muerto, y el hermano le contesta.","F"],["Envejece un año cada vez que miente.","F"],["Su apellido es inventado; lo eligió en el barco que l{o|a} trajo.","H"],["Compró el título que cuelga en su despacho.","H"]
+  ],
+  deseo:[
+    ["Recuperar la casa que su familia perdió.",""],["Demostrar la inocencia de alguien a quien quiere.",""],["Saldar una deuda vieja para quedar libre.",""],["Que su hermana vuelva a hablarle.",""],
+    ["Terminar el libro que empezó hace veinte años.",""],["Irse del lugar donde nació, aunque todavía no sabe adónde.",""],["Ser perdonad{o|a} por alguien que ya murió.",""],
+    ["Ganar, por una vez, una discusión con su padre.",""],["Que alguien, al menos una vez, lea lo que escribe.",""],["Volver a ver el mar antes de que sea tarde.",""],
+    ["Abrir un negocio propio con el nombre de su abuela.",""],["Que su hijo l{o|a} llame sin que haya un motivo.",""],["Encontrar a quien le salvó la vida hace años.",""],
+    ["Ganar el concurso en el que ya perdió cuatro veces.",""],["Vender la casa familiar sin que se entere su hermano.",""],["Dormir una noche entera sin sobresaltos.",""],
+    ["Saber quién era de verdad su padre.",""],["Quedarse con el puesto de su jefe.","RP"],["Volver a tocar en público después de veinte años.",""],["Que el pueblo deje de murmurar sobre su familia.",""],
+    ["Descubrir quién le manda cartas sin firma.",""],["Encontrar a la persona que desapareció la noche del apagón.","P"],["Destruir una prueba que l{o|a} vincula con un delito.","P"],
+    ["Cobrar una recompensa que le cambiaría la vida.","P"],["Recordar el idioma que hablaba de chic{o|a} y que ya nadie habla.","F"],["Romper el pacto que firmó su abuelo.","F"],
+    ["Encontrar la puerta que abre la llave que heredó.","F"],["Recuperar la sombra que le robaron.","F"],["Casarse con quien su familia no aprueba.","H"],["Recuperar las tierras que le quitaron a los suyos.","H"],
+    ["Volver a la tierra de sus padres, que nunca conoció.","H"]
+  ],
+  miedo:[
+    ["A quedarse sol{o|a} en una casa grande.",""],["A parecerse a su padre.",""],["A que descubran lo poco que sabe.",""],["A los hospitales, desde siempre.",""],["A olvidar la cara de alguien.",""],
+    ["A ser feliz, porque cree que después se paga.",""],["Al agua profunda.",""],["A la pobreza, que conoció de cerca.",""],["A que l{o|a} quieran por quien finge ser.",""],
+    ["A la oscuridad completa, aunque lo disimula.",""],["A los perros grandes.",""],["A que su hijo l{o|a} vea llorar.",""],["A enfermarse lejos de casa.",""],["A que se sepa de dónde viene.",""],
+    ["A equivocarse en público.",""],["A envejecer sin haber hecho nada que valga la pena.",""],["A las tormentas de verano.",""],["A volver a enamorarse.",""],["A los uniformes.",""],
+    ["A que se le termine la memoria antes que la vida.",""],["A su propia rabia.",""],["A la multitud.",""],["A que suene el teléfono de madrugada.","RP"],["A los ascensores y a los lugares cerrados.","RP"],
+    ["A quedarse sin trabajo de un día para el otro.","RP"],["A los espejos de las casas ajenas.","F"],["A los relojes que se detienen.","F"],["A la fiebre amarilla, que se llevó a su familia.","H"]
+  ],
+  herida:[
+    ["Creció en una casa donde todo se castigaba con silencio.",""],["Su familia lo perdió todo tras un escándalo que nunca se aclaró.",""],["L{o|a} crió una tía exigente que corregía hasta su manera de respirar.",""],
+    ["A los diecisiete tomó una decisión que todavía le cuesta justificar.",""],["Abandonó una carrera brillante para proteger a otra persona.",""],["Fue el único testigo de un accidente y nunca contó todo lo que vio.",""],
+    ["Su madre se fue una mañana y dejó el desayuno servido.",""],["Estuvo a punto de ahogarse en un río; alguien l{o|a} sacó y se fue sin decir su nombre.",""],
+    ["Heredó un apellido que en el pueblo todavía se pronuncia en voz baja.",""],["Fue muy buen{o|a} en algo, muy temprano, y después dejó de serlo.",""],
+    ["Un incendio se llevó la casa, las fotos y la versión de la historia que contaba la familia.",""],["Perdió a su mejor amigo en una pelea que ya no recuerda cómo empezó.",""],
+    ["L{o|a} echaron del colegio por algo que no hizo.",""],["Creció cuidando a un padre enfermo mientras sus hermanos se iban.",""],["Un maestro l{o|a} humilló delante de toda la clase.",""],
+    ["L{o|a} dejaron plantad{o|a} el día de su casamiento.",""],["Vio cómo remataban la casa donde nació.",""],["Su hermano gemelo murió al nacer, y en la familia nunca se habla de eso.",""],
+    ["Pasó dos años sin hablar, de chic{o|a}, y nadie supo por qué.",""],["Una estafa le llevó los ahorros de toda una vida.",""],["Tuvo que irse de su provincia de un día para el otro.",""],
+    ["L{o|a} culparon de un accidente en la fábrica donde trabajaba.",""],["Un amor de juventud desapareció sin despedirse.",""],["Creció en un orfanato de monjas.","HR"],
+    ["Una noche vio algo en el monte que nadie le creyó.","F"]
+  ],
+  rareza:[
+    ["Colecciona recetas que nunca cocina.",""],["Llora con las publicidades de seguros.","RP"],["Sabe de memoria los horarios de trenes que ya no pasan.",""],["Le reza, a su manera, a un santo que inventó.",""],
+    ["Es incapaz de tirar un papel escrito.",""],["Canta tangos en la ducha con voz impostada de locutor.",""],["Deja propinas exageradas y regatea el precio del pan.",""],["Lee el final de los libros antes que el principio.",""],
+    ["Le tiene cariño a la persona que más l{o|a} perjudicó.",""],["Evita los números pares con una devoción supersticiosa.",""],["Les pone nombre a las plantas de su casa y les habla en voz alta.",""],
+    ["Duerme con la radio encendida en una emisora que no transmite.",""],["Anota en una libreta cada vez que alguien le miente.",""],["Nunca se sienta de espaldas a una puerta.",""],
+    ["Colecciona boletos capicúa.",""],["Camina siempre por el mismo lado de la vereda.",""],["Guarda los dientes de leche de toda la familia.",""],["Pide perdón a los muebles con los que se golpea.",""],
+    ["Tiene un reloj en cada ambiente, cada uno con una hora distinta.",""],["Se viste de fiesta para ir al banco.",""],["Cuenta los escalones de cada edificio al que entra.",""],
+    ["Recorta de los diarios las fotos de desconocidos.",""],["Nunca dice la palabra «adiós».",""],["Escribe con las dos manos, y usa cada una para cosas distintas.",""],["Silba siempre la misma canción cuando está nervios{o|a}.",""]
+  ]
+};
+const SEED_LABEL={oficio:"Oficio",objeto:"Siempre lleva",secreto:"Un secreto",deseo:"Lo que quiere",miedo:"Lo que teme",herida:"Lo que l{o|a} marcó",rareza:"Una rareza"};
+const THIRD=["secreto","deseo","miedo","herida","rareza"];
+
+/* Preguntas. [of] oficio, [obj] objeto, [s] tercera semilla en minúscula sin punto, [S] tercera semilla completa. */
+const Q={
+  puente:{c:"Entre las semillas",l:["¿Cómo llegó [obj] a manos de alguien que trabaja como [of]?","¿Cómo llegó a trabajar como [of]? ¿Quién l{o|a} empujó a eso?","¿Qué pasaría si perdiera [obj] en medio de su jornada de trabajo?","¿Por qué lleva siempre [obj]? ¿Quién más lo sabe?","¿Qué aprendió trabajando como [of] que aplica en todo lo demás?","¿Qué habilidad le dio su trabajo como [of] que nadie imaginaría?","¿Qué dicen sus compañeros de trabajo cuando ven [obj]?","¿Dónde guarda [obj] mientras trabaja como [of]?","¿Qué quería ser de chic{o|a}, y cómo terminó trabajando como [of]?","¿Quién le dio [obj], y en qué circunstancias?","¿Qué haría con [obj] si mañana tuviera que irse para siempre?","¿Qué es lo más difícil de trabajar como [of], y quién lo sabe?"]},
+  secreto:{c:"Sobre su secreto",l:["¿Quién más sabe que [s]?","¿Qué hace, día a día, para que nadie descubra que [s]?","¿Cuándo fue la última vez que estuvo a punto de contar que [s]?","¿Qué pasaría si se supiera que [s]?","¿A quién le haría más daño enterarse de que [s]?","¿Qué siente cuando alguien se acerca demasiado a descubrir que [s]?"]},
+  deseo:{c:"Sobre lo que quiere",l:["¿Qué está dispuest{o|a} a sacrificar para [s]?","¿Qué hizo ayer, concretamente, para [s]?","¿Quién se interpone cuando intenta [s]?","¿Desde cuándo quiere [s]?","¿A quién le confesó alguna vez que quiere [s]?","¿Qué dirían sus padres si supieran que quiere [s]?"]},
+  miedo:{c:"Sobre lo que teme",l:["¿De dónde le viene el miedo [s]?","¿Qué evita hacer por miedo [s]?","¿Quién conoce su miedo [s] y lo usa a su favor?","¿Cuándo sintió por última vez el miedo [s]?","¿Qué le pasa en el cuerpo cuando aparece el miedo [s]?","¿A quién le confesó su miedo [s]?"]},
+  herida:{c:"Sobre lo que l{o|a} marcó",l:["[S] ¿Cómo lo cuenta, si alguna vez lo cuenta?","[S] ¿Qué hace todavía hoy por culpa de eso?","[S] ¿Quién estuvo ahí y qué recuerda esa persona?","[S] ¿Qué objeto le quedó de esa época?","[S] ¿Qué decisión de su vida actual se explica por eso?","[S] ¿A quién culpa, en el fondo?"]},
+  rareza:{c:"Sobre su rareza",l:["¿Desde cuándo [s]?","¿Quién se burla de que [s]? ¿Cómo responde?","¿Qué contesta cuando alguien le pregunta por qué [s]?","¿Quién fue la primera persona en notar que [s]?","¿En qué situación le resultó útil que [s]?","¿Quién de su familia tenía una costumbre parecida?"]},
+  cuerpo:{c:"Cómo se ve",l:["¿Qué es lo primero que alguien nota cuando l{o|a} ve entrar a un bar?","¿Cómo están sus zapatos?","Describí sus manos.","¿Qué ropa se pone cuando quiere causar buena impresión?","¿Qué parte de su cuerpo cuida con un esmero que a otros les parecería exagerado?","¿Cómo huele su casa?","¿Cómo camina cuando está apurad{o|a}?","¿Qué cicatriz tiene, y qué versión cuenta de ella?","¿Qué cambia en su cara cuando miente?","¿Qué lleva puesto hoy, de pies a cabeza?","¿Qué rasgo de su cara heredó, y de quién?","¿Cómo se sienta mientras espera en una sala?","¿Qué hace con las manos mientras escucha?","¿Cómo era en una foto de hace veinte años?","¿Qué detalle de su ropa delata su oficio?","¿Qué piensa de su cara en el espejo de la mañana?"]},
+  costumbre:{c:"Costumbres",l:["¿Qué hace el domingo a la tarde?","¿Qué hay en su heladera ahora mismo?","¿Qué guarda en el cajón de la mesa de luz?","¿Qué es lo primero que hace al despertarse?","¿Qué compra siempre, aunque no lo necesite?","¿Qué hace justo antes de dormirse?","¿Qué desayuna, y dónde?","¿Qué camino hace para ir al trabajo, y por qué ese?","¿Qué hace cuando no puede dormir?","¿Qué lee, si lee?","¿Qué música pone cuando está sol{o|a}?","¿Qué rincón de su casa ordena con obsesión?","¿En qué gasta la plata el día que cobra?","¿Qué hace los días de lluvia?","¿Qué ritual cumple antes de una situación difícil?","¿Qué tiene en los bolsillos ahora mismo?"]},
+  voz:{c:"Cómo habla",l:["¿Qué contesta cuando le preguntan por su madre?","Escribí una frase que repite seguido.","¿Cómo atiende el teléfono?","¿Qué palabra usa mal sin que nadie se anime a corregirl{o|a}?","¿Cómo pide perdón, cuando lo pide?","¿Qué le dice a un desconocido que le pregunta la hora?","¿Cómo insulta cuando está furios{o|a}?","¿Qué dice cuando no sabe qué decir?","¿Qué tema esquiva en las conversaciones?","¿Cómo cuenta un chiste?","¿Cómo le habla a un chico de cinco años?","¿Qué mensaje le mandaría a alguien que extraña?","¿Qué dice al llegar a un velorio?","¿Qué expresión heredó de alguien que ya no está?","¿Cómo discute por teléfono con una empresa?","¿Qué pregunta hace siempre al conocer a alguien?"]},
+  interior:{c:"Por dentro",l:["¿Qué recuerdo le vuelve cuando no puede dormir?","¿De qué se arrepiente?","¿Qué haría con un año libre y el dinero suficiente?","¿Qué l{o|a} hace llorar?","¿Cuándo fue más feliz, y qué terminó con esa época?","¿Qué cree de sí mism{o|a} que no es del todo cierto?","¿Qué quiere, aunque nunca lo diga en voz alta?","¿En qué cree?","¿Qué le da vergüenza de sí mism{o|a}?","¿Qué promesa no cumplió?","¿Qué momento de su vida volvería a vivir?","¿De qué está orgullos{o|a}, aunque nadie lo sepa?","¿Qué l{o|a} enoja más de lo razonable?","¿Qué piensa cuando ve pasar un tren?","¿Qué sueño se le repite?","¿Qué le diría a quien era a los quince años?"]},
+  vinculo:{c:"Otras personas",l:["¿Quién es la última persona a la que llamó?","¿Quién l{o|a} conoce mejor de lo que {él|ella} quisiera?","¿A quién le debe algo?","¿Con quién dejó de hablarse, y por qué?","¿Quién l{o|a} espera cuando llega a casa?","¿Qué opinan de {él|ella} en el barrio?","¿Quién fue su primer amor, y qué quedó de eso?","¿A quién admira en secreto?","¿Quién le debe algo a {él|ella}?","¿Qué persona de su familia se le parece más?","¿A quién llamaría a las cuatro de la mañana?","¿Quién l{o|a} hizo sentir tont{o|a} alguna vez?","¿Con quién comparte la mesa los domingos?","¿A quién le miente con más frecuencia?","¿A quién extraña, aunque no lo admita?","¿Quién se alegraría si le fuera mal?"]},
+  escena:{c:"En situación",l:["¿Dónde estaba y qué hacía la última vez que perdió el control?","¿Qué hace al entrar en una habitación llena de desconocidos?","Si llegara a su casa y encontrara la puerta abierta, ¿qué es lo primero que buscaría?","¿Qué hace cuando alguien llora delante de {él|ella}?","¿Cómo reacciona ante una injusticia que no l{o|a} afecta?","¿Qué hace si se corta la luz a medianoche y está sol{o|a}?","¿Qué hace si encuentra una billetera llena en la calle?","¿Cómo reacciona si alguien se sienta en su lugar de siempre?","¿Qué hace si un desconocido l{o|a} llama por otro nombre?","¿Qué hace la primera noche en un hotel de una ciudad desconocida?","¿Qué hace si recibe una carta de alguien a quien creía muerto?","¿Qué hace si le ofrecen el trabajo de sus sueños en otra ciudad?","¿Cómo reacciona si l{o|a} felicitan en público?","¿Qué hace cuando alguien le pide ayuda en la calle?","¿Qué hace si l{o|a} invitan a una fiesta donde no conoce a nadie?","¿Qué haría con un día entero sin testigos?"]}
+};
+const SLOTS=["puente","third","cuerpo","costumbre","voz","interior","vinculo","escena"];
+const EXTRA=["cuerpo","costumbre","voz","interior","vinculo","escena","puente"];
+const ESCENA=["Escribí la escena en que [n] pierde [obj] en pleno trabajo.","Escribí una página en la que [n] recibe una visita inesperada; usá dos de tus respuestas sin nombrarlas.","Contá un día de trabajo de [n] como [of], de la mañana a la noche, y dejá que la tercera semilla aparezca recién al final.","Escribí la escena en que alguien encuentra [obj] entre las cosas de [n].","Escribí la carta que [n] nunca va a mandar a la persona que nombraste en «Otras personas».","Elegí la respuesta que más te sorprendió y convertila en la primera escena de un cuento protagonizado por [n].","Escribí un diálogo entre [n] y un desconocido, con la tercera semilla presente sin que nadie la mencione.","Escribí la escena en que [n] le miente a alguien que quiere, de modo que el lector lo note recién al final.","Contá lo que ve [n] por la ventana una noche en que no puede dormir.","Escribí la escena en que [n] conoce, sin saberlo todavía, a la persona que va a cambiarle la vida.","Narrá sin diálogos la última vez que [n] tuvo miedo.","Contá un almuerzo familiar desde el punto de vista de [n].","Escribí la escena en que [n] vuelve, después de muchos años, a un lugar de su infancia.","Escribí lo que [n] anotaría en un cuaderno la noche en que por fin consigue algo que buscaba.","Escribí la escena en que [n] tiene que pedirle un favor a la persona que menos quiere ver."];
+
+/* ---------- utilidades ---------- */
+const $=id=>document.getElementById(id);
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const optVal=n=>{const e=document.querySelector(`input[name="${n}"]:checked`);return e?e.value:null};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const res=(t,g)=>t.replace(/\{([^|{}]*)\|([^|{}]*)\}/g,(_,m,f)=>g?f:m);
+const lc=s=>(s.charAt(0).toLowerCase()+s.slice(1)).replace(/\.$/,"");
+function pool(key,g){const r=optVal("reg");if(g===undefined&&typeof S!=="undefined"&&S)g=S.g;return B[key].filter(([,t,s])=>(r==="X"||!t||t.includes(r))&&(!s||g===undefined||(s==="m"?g===0:g===1))).map(([x])=>x)}
+function pickNew(list,cur){if(list.length<2)return list[0];let v;do{v=rnd(list)}while(v===cur);return v}
+const ICON_DIE='<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r=".9" fill="currentColor"/><circle cx="15" cy="15" r=".9" fill="currentColor"/><circle cx="15" cy="9" r=".9" fill="currentColor"/><circle cx="9" cy="15" r=".9" fill="currentColor"/></svg>';
+const ICON_X='<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+/* ---------- estado ---------- */
+let S;
+function fresh(){
+  const g=Math.random()<.5?1:0;
+  const third=rnd(THIRD);
+  const st={num:String(Math.floor(Math.random()*9000)+1000),g,seeds:[{type:"oficio",v:rnd(pool("oficio",g))},{type:"objeto",v:rnd(pool("objeto"))},{type:third,v:rnd(pool(third))}],nombre:"",edad:"",qs:[],esc:rnd(ESCENA)};
+  st.qs=SLOTS.map(sl=>{const k=sl==="third"?third:sl;return {slot:sl,t:rnd(Q[k].l),a:"",extra:false}});
+  return st;
+}
+function save(){try{localStorage.setItem("fichero-v3",JSON.stringify(S))}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem("fichero-v3"));if(s&&s.seeds&&s.qs)return s}catch(e){}return null}
+
+/* ---------- texto de preguntas ---------- */
+function fill(t,html){
+  const g=S.g, of=lc(res(S.seeds[0].v,g)), obj=res(S.seeds[1].v,g), third=res(S.seeds[2].v,g);
+  const w=x=>html?`<span class="sd">${esc(x)}</span>`:x;
+  let out=res(t,g);
+  if(html) out=esc(out);
+  return out.replace(/\[of\]/g,w(of)).replace(/\[obj\]/g,w(obj)).replace(/\[s\]/g,w(lc(third))).replace(/\[S\]/g,w(third))
+            .replace(/\[n\]/g,S.nombre.trim()?(html?esc(S.nombre.trim()):S.nombre.trim()):"tu personaje");
+}
+const qKey=q=>q.slot==="third"?S.seeds[2].type:q.slot;
+
+/* ---------- render ---------- */
+function renderSeeds(flashIdx){
+  $("seeds").innerHTML=S.seeds.map((s,i)=>`<div class="seed"><div class="sh"><span class="stamp">${esc(res(SEED_LABEL[s.type],S.g))}</span><button class="ib" type="button" data-seed="${i}" aria-label="Otra semilla: ${esc(res(SEED_LABEL[s.type],S.g).toLowerCase())}" title="Otra semilla">${ICON_DIE}</button></div><div class="sv${flashIdx===i?" flash":""}">${esc(res(s.v,S.g).replace(/^./,c=>c.toUpperCase()))}</div></div>`).join("");
+}
+function renderQs(flashIdx){
+  $("qs").innerHTML=S.qs.map((q,i)=>{
+    const k=qKey(q);
+    return `<div class="q"><div class="qh"><span class="qn">${String(i+1).padStart(2,"0")}</span><div><span class="qc">${esc(res(Q[k].c,S.g))}</span><label class="qt${flashIdx===i?" flash":""}" for="qa-${i}">${fill(q.t,true)}</label></div><div class="qacts">`+
+      `<button class="ib" type="button" data-rq="${i}" aria-label="Otra pregunta en lugar de la ${i+1}" title="Otra pregunta"${q.a.trim()?" hidden":""}>${ICON_DIE}</button>`+
+      (q.extra?`<button class="ib" type="button" data-xq="${i}" aria-label="Quitar pregunta ${i+1}" title="Quitar">${ICON_X}</button>`:"")+
+      `</div></div><textarea id="qa-${i}" data-qa="${i}" rows="2" placeholder="Escribí acá…">${esc(q.a)}</textarea></div>`;
+  }).join("");
+  progress();
+}
+function renderEsc(flash){const p=$("escena");p.textContent=fill(S.esc,false);if(flash){p.classList.remove("flash");void p.offsetWidth;p.classList.add("flash")}}
+function renderAll(){
+  $("gen-f").checked=S.g===1;$("gen-m").checked=S.g===0;
+  $("fnum").textContent="Ficha N.º "+S.num;
+  $("in-nombre").value=S.nombre;$("in-edad").value=S.edad;
+  $("roll-esc").innerHTML=ICON_DIE;
+  renderSeeds();renderQs();renderEsc();
+}
+function progress(){
+  const n=S.qs.filter(q=>q.a.trim()).length,t=S.qs.length;
+  $("prog-t").textContent=`${n} de ${t} respondidas`;
+  $("prog-b").style.width=(t?100*n/t:0)+"%";
+}
+
+/* ---------- acciones ---------- */
+function rollSeed(i){
+  const s=S.seeds[i];
+  if(i===2){
+    const oldType=s.type, nt=rnd(THIRD);
+    s.type=nt; s.v=pickNew(pool(nt),s.v);
+    S.qs.forEach(q=>{ if(q.slot==="third"&&nt!==oldType&&!q.a.trim()) q.t=rnd(Q[nt].l); });
+    // si la pregunta vinculada ya tiene respuesta y cambia el tipo, conservamos su texto con el nuevo tipo
+    S.qs.forEach(q=>{ if(q.slot==="third"&&nt!==oldType&&q.a.trim()&&!Q[nt].l.includes(q.t)) q.t=Q[nt].l[0]; });
+  } else s.v=pickNew(pool(s.type),s.v);
+  renderSeeds(i);renderQs();renderEsc();save();
+}
+function rollQ(i){const q=S.qs[i];q.t=pickNew(Q[qKey(q)].l,q.t);renderQs(i);save();const b=document.querySelector(`[data-rq="${i}"]`);if(b)b.focus();}
+function addQ(){
+  const used=new Set(S.qs.map(q=>q.t));
+  let slot,t,tries=0;
+  do{slot=rnd(EXTRA);t=rnd(Q[slot].l);tries++}while(used.has(t)&&tries<60);
+  S.qs.push({slot,t,a:"",extra:true});renderQs(S.qs.length-1);save();
+  const ta=$("qa-"+(S.qs.length-1));if(ta)ta.focus();
+}
+function removeQ(i){S.qs.splice(i,1);renderQs();save();}
+
+let tt;function toast(m){$("toast").textContent=m;clearTimeout(tt);tt=setTimeout(()=>$("toast").textContent="",2600)}
+function asText(){
+  const g=S.g;
+  let t=`FICHA DE PERSONAJE N.º ${S.num}\n`;
+  const head=[S.nombre.trim()||"(sin nombre)",S.edad.trim()&&(S.edad.trim()+(/^\d+$/.test(S.edad.trim())?" años":""))].filter(Boolean).join(", ");
+  t+=head+"\n\nSEMILLAS (sorteadas)\n";
+  S.seeds.forEach(s=>t+=`${res(SEED_LABEL[s.type],g)}: ${res(s.v,g).replace(/^./,c=>c.toUpperCase())}\n`);
+  t+="\nEN MIS PALABRAS\n";
+  S.qs.forEach(q=>{t+=`\n${fill(q.t,false)}\n${q.a.trim()||"(sin responder)"}\n`});
+  return t+`\nPRIMERA ESCENA\n${fill(S.esc,false)}\n`;
+}
+function copy(){
+  const txt=asText();
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents($("ficha"));const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Ficha seleccionada: copiala con Ctrl+C")};
+  try{navigator.clipboard.writeText(txt).then(()=>toast("Ficha copiada"),fallback)}catch(e){fallback()}
+}
+let confirmNew=false,cnT;
+function newChar(){
+  const b=$("btn-new");
+  const written=S.qs.some(q=>q.a.trim())||S.nombre.trim();
+  if(written&&!confirmNew){confirmNew=true;b.textContent="Se borra lo escrito. ¿Seguro?";b.classList.add("btn-danger");clearTimeout(cnT);cnT=setTimeout(resetBtn,4000);return;}
+  resetBtn();S=fresh();renderAll();save();toast("Nuevas semillas");window.scrollTo({top:0,behavior:"smooth"});
+}
+function resetBtn(){confirmNew=false;const b=$("btn-new");b.textContent="Empezar otro personaje";b.classList.remove("btn-danger")}
+
+/* ---------- eventos ---------- */
+document.addEventListener("click",e=>{
+  const sd=e.target.closest("[data-seed]"),rq=e.target.closest("[data-rq]"),xq=e.target.closest("[data-xq]");
+  if(sd){rollSeed(+sd.dataset.seed);const b=document.querySelector(`[data-seed="${sd.dataset.seed}"]`);if(b)b.focus();}
+  if(rq)rollQ(+rq.dataset.rq);
+  if(xq)removeQ(+xq.dataset.xq);
+});
+document.addEventListener("input",e=>{
+  const el=e.target;
+  if(el.dataset&&el.dataset.qa!==undefined){
+    const i=+el.dataset.qa;S.qs[i].a=el.value;
+    const b=document.querySelector(`[data-rq="${i}"]`);if(b)b.hidden=!!el.value.trim();
+    progress();save();
+    if(!("fieldSizing" in el.style)){el.style.height="auto";el.style.height=el.scrollHeight+"px"}
+  }
+  if(el.id==="in-nombre"){S.nombre=el.value;renderEsc();save();}
+  if(el.id==="in-edad"){S.edad=el.value;save();}
+});
+$("sug-nombre").addEventListener("click",()=>{S.nombre=rnd(S.g?B.nombresF:B.nombresM)+" "+rnd(B.apellidos);$("in-nombre").value=S.nombre;renderEsc();save();});
+$("sug-edad").addEventListener("click",()=>{const r=optVal("reg");const lo=r==="H"?16:18,hi=r==="H"?70:84;S.edad=String(lo+Math.floor(Math.random()*(hi-lo+1)));$("in-edad").value=S.edad;save();});
+$("btn-addq").addEventListener("click",addQ);
+$("roll-esc").addEventListener("click",()=>{S.esc=pickNew(ESCENA,S.esc);renderEsc(true);save();});
+$("btn-copy").addEventListener("click",copy);
+$("btn-new").addEventListener("click",newChar);
+document.querySelectorAll('input[name="gen"]').forEach(i=>i.addEventListener("change",()=>{S.g=+optVal("gen");const po=pool("oficio");if(!po.includes(S.seeds[0].v)){S.seeds[0].v=rnd(po);toast("Cambió el oficio para este personaje")}renderSeeds();renderQs();renderEsc();save();}));
+document.querySelectorAll('input[name="reg"]').forEach(i=>i.addEventListener("change",()=>{
+  if(!S.qs.some(q=>q.a.trim())){S.seeds.forEach((s,i)=>{if(i<2)s.v=rnd(pool(s.type));else{const p=pool(s.type);if(!p.includes(s.v))s.v=rnd(p)}});renderSeeds();renderQs();renderEsc();save();toast("Semillas del nuevo registro");}
+  else toast("El registro se aplica a las próximas tiradas");
+}));
+
+S=load()||fresh();
+renderAll();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Disparador de tramas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eeedf3; --ink:#20203a; --muted:#6b6a85; --line:#d9d7e4;
+  --cab:#171b33; --cab-edge:#262c50; --brass:#c9a24c; --brass-lite:#e8cf8a; --cream:#f4f1e8;
+  --c1:#1c2a5a; --c2:#2d5a44; --c3:#7a1f2e;
+  --font:"Bricolage Grotesque", "Segoe UI", system-ui, -apple-system, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#0f1122; --ink:#eeedf3; --muted:#9d9cb8; --line:#2c2c48; }
+}
+:root[data-theme="dark"]{ --bg:#0f1122; --ink:#eeedf3; --muted:#9d9cb8; --line:#2c2c48; }
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0; min-height:100%; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:17px; line-height:1.4}
+.wrap{max-width:1120px; margin:0 auto; padding:32px 18px 44px; display:flex; flex-direction:column; gap:22px}
+.intro{color:var(--muted); margin:0; max-width:60ch}
+
+/* Máquina */
+.machine{display:grid; grid-template-columns:minmax(0,1fr) 88px; gap:0; align-items:stretch}
+.cabinet{
+  background:linear-gradient(180deg, #1f2445 0%, var(--cab) 60%);
+  border:3px solid var(--brass); border-radius:34px 34px 26px 26px;
+  box-shadow:0 0 0 6px var(--cab-edge), 0 24px 50px rgba(0,0,0,.35);
+  padding:18px 20px 22px; position:relative; z-index:1;
+}
+.marquee{
+  text-align:center; color:var(--cream); padding:6px 0 16px; position:relative;
+}
+.marquee h1{margin:0; font-weight:800; letter-spacing:-.03em; font-size:clamp(1.7rem,4.6vw,3rem); line-height:1}
+.bulbs{display:flex; justify-content:center; gap:clamp(8px,1.6vw,14px); margin-top:12px}
+.bulbs i{width:9px; height:9px; border-radius:50%; background:#5a4a24; box-shadow:inset 0 -1px 0 rgba(0,0,0,.4)}
+.machine.on .bulbs i{animation:bulb .5s steps(1) infinite}
+.machine.on .bulbs i:nth-child(odd){animation-delay:.25s}
+@keyframes bulb{0%{background:var(--brass-lite); box-shadow:0 0 10px var(--brass)}50%{background:#5a4a24; box-shadow:none}}
+.machine.won .bulbs i{background:var(--brass-lite); box-shadow:0 0 10px var(--brass)}
+
+.reels{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; background:#0b0d1c; padding:12px; border-radius:18px; box-shadow:inset 0 3px 10px rgba(0,0,0,.6)}
+@media (max-width:560px){ .reels{grid-template-columns:1fr} }
+.reel{
+  position:relative; border-radius:12px; overflow:hidden; color:var(--cream);
+  min-height:250px; padding:16px 18px 20px; display:flex; flex-direction:column;
+}
+@media (max-width:860px){ .reel{padding:14px 12px 16px; min-height:230px} }
+@media (max-width:560px){ .reel{min-height:118px} .reel:nth-child(3){min-height:150px} }
+.reel:nth-child(1){background:var(--c1)}
+.reel:nth-child(2){background:var(--c2)}
+.reel:nth-child(3){background:var(--c3)}
+.reel::after{ /* curvatura del rodillo */
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 22%, rgba(255,255,255,.06) 50%, rgba(0,0,0,0) 78%, rgba(0,0,0,.45) 100%);
+}
+.label{display:block; text-align:center; font-weight:700; font-size:1rem; color:var(--brass-lite); position:relative; z-index:1}
+.text{
+  font-size:clamp(1.05rem,2.1vw,1.6rem); font-weight:500; line-height:1.2; letter-spacing:-.01em;
+  margin:auto 0; padding-top:14px; position:relative; z-index:1;
+}
+.text.spinning{overflow:hidden; filter:blur(.6px)}
+.text.tick{animation:tick .07s linear}
+@keyframes tick{from{transform:translateY(-45%); opacity:.3} to{transform:none; opacity:1}}
+.text.land{animation:land .5s cubic-bezier(.3,1.7,.5,1)}
+@keyframes land{0%{transform:translateY(-28px)} 100%{transform:none}}
+
+.tray{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:16px; flex-wrap:wrap}
+.hint{color:#a8a7c4; font-size:.95rem}
+@media (hover:none){ .hint{display:none} }
+.copy{
+  font:700 1rem var(--font); border-radius:999px; padding:11px 22px; cursor:pointer;
+  border:2px solid var(--brass); background:transparent; color:var(--cream);
+}
+.copy:hover{background:rgba(201,162,76,.12)}
+
+/* Palanca */
+.lever-side{position:relative; display:flex; align-items:flex-start; justify-content:center; padding-top:70px}
+.lever{
+  position:relative; width:72px; height:250px; border:0; background:transparent; cursor:grab; padding:0;
+  touch-action:none; --pull:0;
+}
+.lever:active{cursor:grabbing}
+.lever .mount{ /* anclaje al gabinete */
+  position:absolute; left:-6px; bottom:0; width:46px; height:64px; border-radius:0 16px 16px 0;
+  background:linear-gradient(90deg, var(--cab-edge), #1f2445); border:3px solid var(--brass); border-left:0;
+}
+.lever .rod{
+  position:absolute; left:28px; bottom:34px; width:12px; height:180px; border-radius:6px;
+  background:linear-gradient(90deg,#9aa0b8,#e6e8f2 45%,#8a90a8);
+  transform-origin:50% 100%; transform:scaleY(calc(1 - 1.7 * var(--pull)));
+}
+.lever .knob{
+  position:absolute; left:10px; top:0; width:48px; height:48px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #d8586b, var(--c3) 60%, #4a1019);
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
+  transform:translateY(calc(var(--pull) * 306px));
+}
+.lever.snap .rod,.lever.snap .knob{transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.lever:focus-visible{outline:3px solid var(--brass); outline-offset:6px; border-radius:12px}
+.lever:disabled{cursor:default}
+.lever-label{position:absolute; top:24px; font-size:.85rem; font-weight:700; color:var(--muted); white-space:nowrap}
+
+@media (max-width:560px){
+  .machine{grid-template-columns:minmax(0,1fr) 64px}
+  .lever{width:56px; height:210px}
+  .lever .knob{left:6px; width:42px; height:42px}
+  .lever .rod{left:21px; height:150px}
+  .lever .knob{transform:translateY(calc(var(--pull) * 255px))}
+  .lever .mount{width:36px}
+  .lever-side{padding-top:120px}
+}
+
+footer{color:var(--muted); font-size:.9rem; border-top:1px solid var(--line); padding-top:14px}
+:focus-visible{outline:3px solid var(--brass); outline-offset:3px}
+.toast{
+  position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom,0px)); transform:translate(-50%,16px);
+  background:var(--ink); color:var(--bg); padding:11px 20px; border-radius:999px; font-weight:700;
+  opacity:0; pointer-events:none; transition:opacity .2s, transform .2s;
+}
+.toast.show{opacity:1; transform:translate(-50%,0)}
+@media (prefers-reduced-motion: reduce){
+  .text.tick,.text.land{animation:none} .text.spinning{filter:none}
+  .machine.on .bulbs i{animation:none} .lever.snap .rod,.lever.snap .knob{transition:none} .toast{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="intro">Bajá la palanca y esperá a que se detengan los tres rodillos: un personaje, un lugar y algo que se tuerce.</p>
+
+  <div class="machine" id="machine">
+    <div class="cabinet">
+      <div class="marquee">
+        <h1>Disparador de tramas</h1>
+        <div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="reels">
+        <section class="reel" data-key="personaje"><span class="label">Personaje</span><div class="text" aria-live="polite"></div></section>
+        <section class="reel" data-key="escenario"><span class="label">Escenario</span><div class="text" aria-live="polite"></div></section>
+        <section class="reel" data-key="giro"><span class="label">Giro</span><div class="text" aria-live="polite"></div></section>
+      </div>
+      <div class="tray">
+        <span class="hint">También funciona con la barra espaciadora.</span>
+        <button class="copy" id="copy">Copiar la trama</button>
+      </div>
+    </div>
+    <div class="lever-side">
+      <button class="lever" id="lever" aria-label="Bajar la palanca: nueva trama">
+        <span class="mount"></span><span class="rod"></span><span class="knob"></span>
+      </button>
+    </div>
+  </div>
+
+  <footer>Los giros están inspirados en <i>Las treinta y seis situaciones dramáticas</i> de Georges Polti.</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const OFICIOS = [["un kiosquero", "una kiosquera"], ["un colectivero", "una colectivera"], ["un enfermero de guardia", "una enfermera de guardia"], ["un maestro de primaria", "una maestra de primaria"], ["un repartidor de delivery", "una repartidora de delivery"], ["un taxista", "una taxista"], ["un empleado del correo", "una empleada del correo"], ["un panadero", "una panadera"], ["un peluquero", "una peluquera"], ["un mozo", "una moza"], ["un portero de edificio", "una portera de edificio"], ["un policía de tránsito", "una policía de tránsito"], ["un mecánico", "una mecánica"], ["un cura de pueblo", "una monja de pueblo"], ["un sodero", "una sodera"], ["un sastre", "una modista"], ["un médico de pueblo", "una médica de pueblo"], ["un almacenero", "una almacenera"], ["un bombero", "una bombera"], ["un cocinero", "una cocinera"], ["un abogado", "una abogada"], ["un vendedor ambulante", "una vendedora ambulante"], ["un guardia de seguridad", "una guardia de seguridad"], ["un fotógrafo de casamientos", "una fotógrafa de casamientos"], ["un entrenador de fútbol infantil", "una entrenadora de fútbol infantil"], ["un cajero de supermercado", "una cajera de supermercado"], ["un carnicero", "una carnicera"], ["un periodista", "una periodista"], ["un veterinario", "una veterinaria"], ["un locutor de radio", "una locutora de radio"], ["un farmacéutico", "una farmacéutica"], ["un chofer de remís", "una chofer de remís"], ["un plomero", "una plomera"], ["un electricista", "una electricista"], ["un sereno de obra", "una serena de obra"], ["un verdulero", "una verdulera"], ["un pescador", "una pescadora"], ["un carpintero", "una carpintera"], ["un odontólogo", "una odontóloga"], ["un psicólogo", "una psicóloga"], ["un contador", "una contadora"], ["un camionero", "una camionera"], ["un empleado de banco", "una empleada de banco"], ["un profesor de música", "una profesora de música"], ["un jardinero", "una jardinera"], ["un niñero", "una niñera"], ["un vendedor de seguros", "una vendedora de seguros"], ["un recepcionista de hotel", "una recepcionista de hotel"], ["un tatuador", "una tatuadora"], ["un recolector de residuos", "una recolectora de residuos"]];
+const LUGARES = ["Un supermercado", "Un ascensor", "La casa de los abuelos", "Un salón de fiestas", "La sala de espera de una guardia", "Un aula", "Un micro de larga distancia", "Una playa", "Un cine", "Una iglesia de pueblo", "Una estación de tren", "Un cementerio", "Una plaza de barrio", "Una sala velatoria", "Un hotel de ruta", "Un camping", "Un aeropuerto", "Una oficina", "Una peluquería de barrio", "Un gimnasio", "Un bar", "La cocina de un restaurante", "Un departamento recién alquilado", "Una feria de fin de semana", "Una casa de campo", "Un edificio de departamentos", "Un club de barrio", "Una estación de servicio", "Un hospital", "Un auto detenido en la ruta"];
+const GIROS = ["Alguien le pide que lo esconda, y esconderlo lo vuelve cómplice.", "Un desconocido golpea su puerta pidiendo ayuda en mitad de la noche.", "Le ruegan que interceda ante alguien poderoso que le debe un favor.", "Tiene que rescatar a alguien que no quiere ser rescatado.", "Llega tarde para salvar a alguien y descubre que todavía queda una oportunidad.", "Salva a un desconocido y queda atado a su destino.", "Descubre quién le arruinó la vida y lo tiene al alcance de la mano.", "Encuentra la prueba que puede hundir a quien lastimó a alguien que quería.", "Pasaron veinte años y por fin aparece la oportunidad de devolver el golpe.", "Un familiar vuelve para cobrarse una deuda que nadie en la casa quiere nombrar.", "Descubre que su padre le hizo algo imperdonable a su madre hace mucho tiempo.", "Un hermano le exige ayuda para vengarse de otro hermano.", "Alguien le viene siguiendo los pasos desde hace días y ya sabe demasiado.", "Tiene que desaparecer esta misma noche.", "Alguien del pasado reaparece para cobrarle algo que creía olvidado.", "En una sola noche pierde todo lo que había construido.", "Le toca dar la noticia de una catástrofe a quienes todavía no saben nada.", "El negocio, el club o la familia que sostenía se derrumba de golpe.", "Queda a merced de alguien que controla su trabajo, su casa y sus secretos.", "Una mala racha tras otra le va quitando todo, y alguien parece disfrutarlo.", "Firma algo sin leer y ahora, en los hechos, pertenece a otra persona.", "Le proponen sumarse a un plan para derrocar a quien manda.", "Se cansa de obedecer y organiza a los demás en secreto.", "Descubre que la rebelión que apoyaba la dirige alguien peor.", "Se propone algo que todos consideran imposible, y el plazo vence mañana.", "Acepta una apuesta que puede cambiarle la vida o arruinársela.", "Tiene que recuperar algo guardado en el lugar más vigilado de la ciudad.", "Alguien que estaba a su cargo desaparece sin dejar rastro.", "Ayuda a alguien a escapar de su familia, y la familia lo sabe.", "Le avisan que alguien que quiere está retenido y le piden algo a cambio.", "Recibe un mensaje que solo tiene sentido si resuelve un acertijo.", "Un desconocido sabe su nombre, su historia y algo que nunca le contó a nadie.", "Encuentra una foto vieja donde aparece en un lugar en el que jamás estuvo.", "Necesita una firma de alguien que tiene todos los motivos para negársela.", "Tiene que convencer a un jefe, un juez o una familia en una sola conversación.", "Quiere comprar la casa de su infancia y el dueño se niega a venderla.", "Una herencia saca a la luz un odio familiar que venía de lejos.", "En una cena familiar alguien dice en voz alta lo que todos callaban.", "Tiene que cuidar a un familiar al que nunca pudo perdonar.", "Compite con su propio hermano por el mismo lugar.", "Sus padres siempre prefirieron a otro hijo, y ahora hay que repartir lo que dejaron.", "Se enamora de la misma persona que su hermana.", "Escucha por casualidad a dos amantes planear cómo sacarse de encima a alguien.", "Sospecha que su pareja y su mejor amigo quieren deshacerse de alguien.", "Le piden ayuda para resolver el problema de un marido que estorba.", "Empieza a dudar de su memoria justo cuando más la necesita.", "Alguien cercano empieza a ver cosas que nadie más ve.", "Todos a su alrededor insisten en que algo que vivió nunca ocurrió.", "Un mensaje enviado por error desata una cadena de consecuencias.", "Abre algo que le habían pedido que nunca abriera.", "Cuenta un secreto ajeno en el momento menos indicado.", "Se enamora y descubre un parentesco que nadie le había contado.", "Un test de ADN revela que su pareja y su familia tienen algo en común.", "Descubre que la persona con la que sale es hija del gran amor de su madre.", "Perjudica a un desconocido que resulta ser de su propia sangre.", "Denuncia a alguien y después se entera de que era su hermano.", "Atropella a alguien en la ruta y resulta ser un familiar que no veía hace años.", "Defender aquello en lo que cree le va a costar el trabajo.", "Tiene que elegir entre decir la verdad y conservar a quien ama.", "Renuncia a todo para cumplir una promesa hecha a alguien que ya murió.", "Tiene que cargar con la culpa de un familiar para salvarlo.", "Deja sus sueños de lado para sostener a su familia.", "Vende lo único valioso que tiene para pagar la deuda de un pariente.", "Una obsesión le hace arriesgar todo lo que tiene.", "Por amor a alguien empieza a mentirle a todo el mundo.", "El juego, el trabajo o una persona le van consumiendo la vida.", "Para evitar una tragedia debe entregar a alguien que ama.", "Tiene que denunciar a su propio hijo.", "Solo puede salvar a una de las dos personas que más quiere.", "Se enfrenta a alguien mucho más poderoso por algo que ambos quieren.", "Su jefe se fija en la misma persona que le gusta.", "Le disputa a la familia más rica del barrio un terreno que considera suyo.", "Descubre una infidelidad que no le corresponde revelar.", "Encuentra en el teléfono de su pareja un mensaje que no debía ver.", "Es la tercera persona en un matrimonio y ya no quiere esconderse.", "Se enamora de alguien con quien le está prohibido estar.", "Mantiene un amor secreto que, si sale a la luz, destruye dos familias.", "Se enamora de la pareja de su mejor amigo.", "Descubre que la persona que más admira hizo algo imperdonable.", "Se entera de que su madre o su padre tuvo una vida secreta.", "Ve en las noticias a alguien que ama, acusado de algo terrible.", "Ama a alguien y todo conspira para mantenerlos separados.", "Se enamora de alguien que se va del país en una semana.", "Las familias de los dos se odian desde hace generaciones.", "Se enamora de alguien del bando contrario.", "Se enamora de la persona que vino a embargar su casa.", "Tiene que investigar a alguien y termina de su lado.", "Puede ascender si traiciona a una sola persona.", "Se le presenta la oportunidad de ocupar el lugar de alguien que acaba de caer.", "Hace trampa una vez para llegar y ya no puede dejar de hacerla.", "Desafía a una fuerza que todos creen invencible.", "Se enfrenta a la empresa que maneja todo el pueblo.", "Decide que su destino no está escrito y pone todo a prueba.", "Alguien siembra una sospecha falsa y los celos hacen el resto.", "Malinterpreta una foto y toma una decisión irreversible.", "Un chisme del barrio le hace desconfiar de quien menos lo merece.", "Culpan a una persona inocente de algo que sabe quién hizo.", "Pasa años cumpliendo una condena por algo que hizo otra persona.", "Su testimonio mandó a alguien a prisión, y ahora duda de lo que vio.", "Una falta del pasado vuelve cuando alguien empieza a hacer preguntas.", "Hace meses que no duerme por algo que hizo y nadie sabe.", "Busca a quien lastimó hace años para pedirle perdón.", "Reaparece alguien a quien daba por muerto.", "Encuentra a su hermano después de treinta años de búsqueda.", "Una desconocida le dice que es su hija.", "Ve cómo se desmorona la vida de alguien que quiere, sin poder impedirlo.", "Pierde a alguien y descubre que esa persona tenía otra vida.", "Tiene que despedirse de alguien y le queda un solo día."];
+
+const rnd = n => Math.floor(Math.random()*n);
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const KEYS = ["personaje","escenario","giro"];
+const SIZE = {personaje:OFICIOS.length, escenario:LUGARES.length, giro:GIROS.length};
+const STORE = "disparador-tramas-v5";
+
+// Cada lista funciona como un mazo: se reparte entera antes de volver a barajar.
+let state = { values:{}, bags:{personaje:[], escenario:[], giro:[]}, last:{} };
+function shuffle(n){ const a=[...Array(n).keys()]; for(let i=n-1;i>0;i--){ const j=rnd(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function draw(k){
+  let bag = state.bags[k];
+  if(!Array.isArray(bag) || !bag.length){
+    bag = shuffle(SIZE[k]);
+    if(bag.length>1 && bag[bag.length-1]===state.last[k]) [bag[0], bag[bag.length-1]] = [bag[bag.length-1], bag[0]];
+  }
+  const i = bag.pop(); state.bags[k]=bag; state.last[k]=i; return i;
+}
+const GEN = {
+  personaje: () => cap(OFICIOS[draw("personaje")][rnd(2)]),
+  escenario: () => LUGARES[draw("escenario")],
+  giro: () => GIROS[draw("giro")].replace(/\.$/, "")
+};
+const FLASH = {
+  personaje: () => { const o = OFICIOS[rnd(OFICIOS.length)]; return cap(o[rnd(2)]); },
+  escenario: () => LUGARES[rnd(LUGARES.length)],
+  giro: () => GIROS[rnd(GIROS.length)].replace(/\.$/, "")
+};
+
+function save(){ try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){} }
+function load(){
+  try{ const d = JSON.parse(localStorage.getItem(STORE)||"null");
+    if(d && d.bags && KEYS.every(k=>Array.isArray(d.bags[k]) && d.bags[k].every(i=>Number.isInteger(i) && i>=0 && i<SIZE[k]))){ state = d; state.last = d.last||{}; return true; } }catch(e){}
+  return false;
+}
+const textOf = k => document.querySelector(`[data-key="${k}"] .text`);
+function restart(el, cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+function show(k){ state.values[k] = state.values[k].replace(/\.$/, ""); textOf(k).textContent = state.values[k]; }
+
+/* Giro de rodillos */
+const STOP = {personaje:900, escenario:1400, giro:1950};
+const reduceMotion = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const machine = document.getElementById("machine");
+const lever = document.getElementById("lever");
+let spinning = false;
+
+function spin(k, duration, done){
+  const reel = document.querySelector(`[data-key="${k}"]`), t = textOf(k);
+  reel.setAttribute("aria-busy","true");
+  t.classList.remove("land");
+  t.textContent = state.values[k];
+  t.style.height = t.offsetHeight + "px";
+  t.classList.add("spinning");
+  const start = performance.now(); let delay = 45;
+  (function tick(){
+    if(performance.now() - start >= duration){
+      t.textContent = state.values[k];
+      t.classList.remove("spinning","tick"); t.style.height = "";
+      restart(t, "land"); reel.removeAttribute("aria-busy"); done(); return;
+    }
+    t.textContent = FLASH[k](); restart(t, "tick");
+    delay = Math.min(delay * 1.1, 210); setTimeout(tick, delay);
+  })();
+}
+function rollAll(){
+  if(spinning) return;
+  KEYS.forEach(k=>{ state.values[k] = GEN[k](); });
+  save();
+  if(reduceMotion()){ KEYS.forEach(show); return; }
+  spinning = true; lever.disabled = true;
+  machine.classList.remove("won"); machine.classList.add("on");
+  let finished = 0;
+  KEYS.forEach(k=> spin(k, STOP[k], ()=>{
+    if(++finished === KEYS.length){
+      spinning = false; lever.disabled = false;
+      machine.classList.remove("on"); machine.classList.add("won");
+      setTimeout(()=>machine.classList.remove("won"), 900);
+    }
+  }));
+}
+
+/* Palanca: se arrastra hacia abajo o se toca */
+let drag = null;
+function setPull(v){ lever.style.setProperty("--pull", Math.max(0, Math.min(1, v))); }
+function release(){
+  lever.classList.add("snap");
+  requestAnimationFrame(()=>setPull(0));
+  setTimeout(()=>lever.classList.remove("snap"), 460);
+}
+function pullAndRelease(){
+  if(spinning) return;
+  lever.classList.add("snap"); setPull(1);
+  setTimeout(()=>{ rollAll(); release(); }, reduceMotion()?0:260);
+}
+lever.addEventListener("pointerdown", e=>{
+  if(spinning) return;
+  drag = {y:e.clientY, moved:false, travel: lever.clientHeight};
+  lever.setPointerCapture(e.pointerId); lever.classList.remove("snap");
+});
+lever.addEventListener("pointermove", e=>{
+  if(!drag) return;
+  const dy = e.clientY - drag.y;
+  if(Math.abs(dy) > 6) drag.moved = true;
+  setPull(dy / drag.travel);
+});
+lever.addEventListener("pointerup", e=>{
+  if(!drag) return;
+  const pulled = parseFloat(getComputedStyle(lever).getPropertyValue("--pull")) || 0;
+  const moved = drag.moved; drag = null;
+  if(!moved){ pullAndRelease(); return; }
+  if(pulled > 0.45){ rollAll(); }
+  release();
+});
+lever.addEventListener("pointercancel", ()=>{ drag = null; release(); });
+lever.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); pullAndRelease(); } });
+lever.addEventListener("click", e=>{ if(e.detail===0) pullAndRelease(); }); // activación por teclado
+document.addEventListener("keydown", e=>{
+  if(e.code==="Space"){ e.preventDefault(); pullAndRelease(); }
+});
+
+/* Copiar */
+function toast(m){ const el=document.getElementById("toast"); el.textContent=m; el.classList.add("show"); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove("show"),1600); }
+document.getElementById("copy").onclick = async ()=>{
+  const v = state.values;
+  if(!v.giro || spinning){ toast("Primero bajá la palanca"); return; }
+  const text = `Personaje: ${v.personaje}\nEscenario: ${v.escenario}\nGiro: ${v.giro}`;
+  try{ await navigator.clipboard.writeText(text); toast("Trama copiada"); }
+  catch(e){
+    const ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("Trama copiada"); }catch(_){ toast("No se pudo copiar"); }
+    ta.remove();
+  }
+};
+
+// Al entrar, los rodillos arrancan vacíos: el mazo barajado se conserva, la última trama no se muestra.
+load();
+state.values = {};
+</script>
+</body>
+</html>

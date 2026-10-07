@@ -1,0 +1,495 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Tres cartas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#E4E7EC; --table:#D8DDE5; --card:#FBFAF6; --paper:#FCFBF7; --ink:#1C2230; --muted:#5B6476;
+  --line:#C3C9D4; --rule:#D5DBE5; --accent:#9B2A3A; --accent-soft:#F1DADD; --gold:#A57E2C;
+  --shadow:0 1px 2px rgba(28,34,48,.08),0 8px 24px -10px rgba(28,34,48,.28);
+  --display:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#131922; --table:#1A212C; --card:#242C39; --paper:#1E2530; --ink:#ECE8DF; --muted:#9CA5B4;
+    --line:#364152; --rule:#2C3543; --accent:#D8677A; --accent-soft:#3A2630; --gold:#CFA85A;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#131922; --table:#1A212C; --card:#242C39; --paper:#1E2530; --ink:#ECE8DF; --muted:#9CA5B4;
+  --line:#364152; --rule:#2C3543; --accent:#D8677A; --accent-soft:#3A2630; --gold:#CFA85A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px -12px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.5;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:980px;margin:0 auto}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 24px;padding-block:28px 16px;border-bottom:1px solid var(--line)}
+.brand h1{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.5rem);letter-spacing:-.01em;margin:0;line-height:1}
+.brand p{margin:6px 0 0;color:var(--muted);font-style:italic;font-size:.98rem}
+.ajustes{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.tabs{display:inline-flex;gap:4px}
+.tabs button{border:1px solid transparent;background:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:var(--display);font-size:1rem;color:var(--muted)}
+.tabs button[aria-pressed="true"]{border-color:var(--line);background:var(--card);color:var(--ink)}
+.tabs .cnt{font-family:var(--mono);font-size:.68rem;margin-left:4px;color:var(--gold)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--card)}
+.seg button{border:0;background:none;padding:5px 11px;border-radius:999px;cursor:pointer;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* puertas */
+.puertas{display:flex;gap:6px;overflow-x:auto;padding-block:16px 4px;scrollbar-width:thin}
+.puertas button{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:1px solid transparent;background:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--muted)}
+.puertas .n{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em}
+.puertas .t{font-family:var(--display);font-size:.9rem;font-weight:500}
+.puertas .c{font-family:var(--mono);font-size:.62rem;color:var(--gold)}
+.puertas button.cur{border-color:var(--line);background:var(--card);color:var(--ink)}
+.puertas button:hover{color:var(--ink)}
+
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 24px;margin:22px 0 6px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.head h2{font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.2rem);margin:4px 0 0;line-height:1.1;text-wrap:balance}
+.head .sub{color:var(--muted);font-style:italic;margin:4px 0 0}
+.tiempo{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.mesa{background:var(--table);border-radius:18px;padding:28px 20px;margin-top:16px}
+.cartas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;max-width:780px;margin:0 auto}
+.carta{position:relative;aspect-ratio:5/7;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;cursor:pointer;text-align:left;transition:transform .35s ease,opacity .35s ease;animation:reparto .5s ease both}
+.carta:nth-child(2){animation-delay:.07s}.carta:nth-child(3){animation-delay:.14s}
+@keyframes reparto{from{transform:translateY(10px) rotate(-1.5deg);opacity:.35}to{transform:none;opacity:1}}
+.carta::before{content:"";position:absolute;inset:6px;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);border-radius:10px;pointer-events:none}
+.carta:hover{transform:translateY(-4px)}
+.carta .esq{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.carta .frase{flex:1;display:flex;align-items:center;font-style:italic;font-size:clamp(1.02rem,1.9vw,1.2rem);line-height:1.35;padding:8px 2px;text-wrap:pretty}
+.carta .pie{font-family:var(--display);font-size:.8rem;color:var(--muted);text-align:center}
+.carta.out{opacity:0;transform:translateY(30px) rotate(6deg) scale(.9)}
+.carta.in{transform:translateY(-6px) scale(1.03);box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.herr{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;cursor:pointer;font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase}
+.btn:hover:not(:disabled){border-color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.pri{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.btn.pri:hover{background:var(--accent);border-color:var(--accent)}
+.btn.peligro{color:var(--accent);border-color:var(--accent)}
+.hint{text-align:center;color:var(--muted);font-style:italic;margin:14px 0 0;font-size:.95rem}
+.link{background:none;border:0;padding:0;cursor:pointer;color:var(--muted);text-decoration:underline;text-underline-offset:3px;font-style:italic;font-size:.92rem}
+
+/* página del diario */
+.pagina{background:var(--paper);border:1px solid var(--line);border-radius:6px 14px 14px 6px;box-shadow:var(--shadow);margin-top:18px;padding:clamp(20px,4vw,38px) clamp(18px,4vw,40px) clamp(20px,4vw,38px) clamp(34px,6vw,64px);position:relative}
+.pagina::before{content:"";position:absolute;top:0;bottom:0;left:clamp(22px,4vw,44px);width:1px;background:color-mix(in srgb,var(--accent) 55%,transparent)}
+.fecha{font-family:var(--display);font-size:1.15rem;margin:0}
+.fecha small{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.epigrafe{margin:18px 0 6px;font-style:italic;font-size:clamp(1.2rem,2.4vw,1.45rem);line-height:1.35;max-width:48ch;text-wrap:balance}
+.epigrafe-cat{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.guia{color:var(--muted);font-size:.98rem;margin:14px 0 18px;max-width:62ch}
+.cuando{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0 0 16px}
+.cuando .extra{display:flex;flex-wrap:wrap;gap:10px}
+input.corto,textarea.corto{border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:italic 1rem/1.4 var(--serif);padding:8px 12px;width:100%}
+.cuando input.corto{width:auto;max-width:220px}
+.cuando input.edad{max-width:110px}
+textarea.renglones{width:100%;min-height:320px;border:0;background:transparent;color:var(--ink);font:1.08rem/1.8 var(--serif);padding:0;resize:vertical;background-image:repeating-linear-gradient(transparent 0 calc(1.8em - 1px),var(--rule) calc(1.8em - 1px) 1.8em);background-attachment:local}
+textarea.renglones:focus{outline:none}
+.pie-pagina{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule)}
+.cuenta{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.06em}
+.margen{margin-top:16px}
+.margen label,.campo label{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.pasaron{margin-top:18px;font-size:.9rem;color:var(--muted)}
+.pasaron span{font-style:italic}
+.aviso{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.04em}
+.blanca{max-width:300px;margin:0 auto}
+.blanca-grid{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:28px;max-width:780px;margin:0 auto;align-items:start}
+.blanca-grid .blanca{margin:0;width:100%}
+.ref h3{font-family:var(--mono);font-weight:500;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.ref p.s{font-style:italic;color:var(--muted);margin:0 0 10px;font-size:.95rem}
+.ref ul{margin:0;padding:0}
+.ref li{list-style:none;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 14px;padding:10px 0;border-top:1px dashed var(--line)}
+.ref li span{font-style:italic;flex:1 1 200px}
+.ref li.on span{color:var(--accent)}
+.desde{margin:0 0 4px;font-size:.9rem;color:var(--muted)}
+.desde span{font-style:italic}
+@media (max-width:700px){.blanca-grid{grid-template-columns:1fr}.blanca-grid .blanca{max-width:340px}}
+.blanca .carta{cursor:default}
+.blanca textarea{flex:1;border:0;background:transparent;resize:none;font:italic 1.15rem/1.35 var(--serif);color:var(--ink);padding:8px 2px}
+.blanca textarea:focus{outline:none}
+
+/* cuaderno */
+.filtros{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:14px}
+select{font:italic 1rem var(--serif);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.grupo{margin-top:26px}
+.grupo h3{font-family:var(--display);font-size:1.3rem;margin:0 0 4px;display:flex;align-items:baseline;gap:10px}
+.grupo h3 small{font-family:var(--mono);font-size:.66rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.entrada{display:grid;grid-template-columns:130px minmax(0,1fr);gap:4px 22px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:16px 0;cursor:pointer}
+.entrada:hover .ef{color:var(--accent)}
+.entrada .meta{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;line-height:1.6}
+.entrada .meta b{display:block;color:var(--gold);font-weight:500}
+.entrada .ef{font-style:italic;font-size:1.1rem;margin:0}
+.entrada .ex{margin:4px 0 0;color:var(--muted);max-width:64ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vacio{border:1px dashed var(--line);border-radius:14px;padding:28px;margin-top:22px;text-align:center;color:var(--muted);font-style:italic}
+.acciones{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:26px}
+.confirmar{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;font-style:italic;color:var(--muted)}
+footer{margin-top:40px;color:var(--muted);font-size:.85rem;font-style:italic;border-top:1px solid var(--line);padding-top:14px}
+
+@media (max-width:700px){
+  .cartas{grid-template-columns:1fr;gap:12px}
+  .carta{aspect-ratio:auto;min-height:150px}
+  .mesa{padding:18px 12px}
+  .entrada{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.carta{animation:none;transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Tres cartas</h1>
+      <p>Disparadores para escribir en primera persona. La carta que elegís es la primera frase de una voz, la tuya o la de un personaje que empezás a jugar.</p>
+    </div>
+    <div class="ajustes">
+      <span class="tabs" role="group" aria-label="Secciones">
+        <button type="button" id="tab-escribir" data-tab="escribir">Escribir</button>
+        <button type="button" id="tab-cuaderno" data-tab="cuaderno">Escritos<span class="cnt" id="cnt"></span></button>
+      </span>
+      <span class="seg" role="group" aria-label="Género gramatical">
+        <button type="button" id="g-m" data-g="m">masc.</button>
+        <button type="button" id="g-f" data-g="f">fem.</button>
+      </span>
+    </div>
+  </header>
+  <main id="app"></main>
+  <footer>Lo que escribís se guarda solamente en este navegador y en este dispositivo. Para conservarlo en otro lado, usá «Copiar los escritos».</footer>
+</div>
+
+<script>
+/* Cada puerta tiene cartas del presente (p) y de la memoria (m). */
+const PUERTAS=[
+ {k:"Recuerdo",sub:"Una escena que todavía vuelve.",
+  guia:"Contá la escena desde adentro: dónde estabas, quién más estaba, qué tenías en las manos, qué se dijo y qué quedó sin decir.",
+  p:["Esta semana volvió un recuerdo que creía olvidado.","Hoy algo me hizo acordar de una persona que ya no veo.","Últimamente pienso mucho en una conversación vieja.","Un olor de hoy me llevó a otro tiempo."],
+  m:["No debería haberle contestado así.","Fue mi peor momento en la escuela.","Siempre evité esa clase de situaciones.","Esa noche volví a casa caminando, aunque había colectivo.","Me enteré de la noticia por otra persona, y fingí que ya lo sabía.","Me acuerdo de la primera vez que vi llorar a un adulto.","Todavía me acuerdo del olor de aquella cocina.","Me culparon por algo que había hecho otra persona, y me callé.","Hubo un verano en que todo parecía posible.","Rompí algo que no era mío y lo escondí durante años.","Aquella vez me quedé esperando en la puerta más de lo que debía.","Me fui de una fiesta sin despedirme de nadie.","Gané algo que no merecía.","Tuve que elegir entre dos personas que quería."]},
+ {k:"Contradicción",sub:"Dos fuerzas que tiran para lados distintos.",
+  guia:"Buscá una ocasión concreta en que las dos mitades de la carta aparecieron el mismo día, y escribila.",
+  p:["Soy hielo y brasa.","Necesito estar sol{o|a} y me asusta que me dejen.","Digo que no me importa, y después lo repaso durante noches enteras.","Admiro a la gente valiente y huyo de cualquier discusión.","Quiero irme de acá desde que tengo memoria, y cada vez que puedo, me quedo.","Me río más fuerte cuando más me duele.","Creo en todo y desconfío de todos.","Planifico cada detalle y después hago lo que se me ocurre en el momento.","Pido ayuda cuando ya no la necesito."],
+  m:["Me levantaba eufóric{o|a} y me acostaba desahuciad{o|a}.","Quería que todos me vieran y al mismo tiempo que nadie se diera cuenta de que estaba allí.","De chic{o|a} quería crecer rápido, y de grande extrañé lo que apuré.","Hubo una época en que defendía con fuerza lo que hoy me avergüenza.","Durante años hice lo contrario de lo que decía.","Era generos{o|a} con los desconocidos y avar{o|a} con quienes me querían."]},
+ {k:"Cuerpo",sub:"Lo que el cuerpo sabía.",
+  guia:"Escribí desde las sensaciones: temperatura, peso, ruido, cansancio. Dejá que el cuerpo cuente lo que la cabeza callaba.",
+  p:["Mis manos llegan antes que mis palabras.","Hay una parte de mi cuerpo que tiene su historia.","Duermo poco, y lo cuento como si fuera una virtud.","Me reconocen por la voz antes de verme.","Tengo la risa de alguien de mi familia, y me sorprende escucharla en mí.","El frío me cambia el humor.","Hay un gesto mío que los demás reconocen enseguida.","Camino siempre del lado de la pared.","Últimamente mi cuerpo me pide algo que no le doy."],
+  m:["Era delgad{o|a} y vivía en la consulta médica.","Mi rostro daba cuenta de lo que me pasaba.","Mi cuerpo era ágil y siempre quería más.","Crecí de golpe, y durante años no supe dónde poner los brazos.","Me miraba en las vidrieras cuando creía que nadie me veía.","Mi cuerpo supo que algo andaba mal mucho antes que yo.","Hubo un año en que aprendí a hacer algo con el cuerpo que todavía sé hacer."]},
+ {k:"Mente",sub:"Cómo pienso, qué temo, qué repito.",
+  guia:"Mostrá ese modo de pensar funcionando en un momento cualquiera, con los pensamientos tal como llegan.",
+  p:["Repito las conversaciones en la cabeza hasta que las gano.","Le tengo miedo a algo que nunca le conté a nadie.","Necesito saber cómo termina todo antes de empezar.","Me cuesta perdonarme cosas que a otros les perdono enseguida.","Cuando algo sale bien, me quedo esperando el golpe.","Pienso mejor caminando que sentad{o|a}.","Me aburro enseguida de lo que ya tengo.","Me enojo tarde, y cuando me enojo ya es demasiado.","Siento culpa cuando descanso.","Cuando entro a un lugar, busco dónde está la salida."],
+  m:["Hay una idea que me acompaña desde chic{o|a} y todavía no sé si es cierta.","De chic{o|a} le tenía miedo a algo que ahora me da risa.","Hubo una época en que no podía dejar de pensar en una sola cosa.","Una vez creí algo con todas mis fuerzas, y después dejé de creerlo.","Contaba los escalones sin darme cuenta."]},
+ {k:"Los otros",sub:"El lugar que ocupo entre la gente.",
+  guia:"Poné a quien habla en una reunión, en una fila o en una mesa familiar, y dejá que los demás aparezcan con lo que hacen y dicen.",
+  p:["En las reuniones termino siempre en la cocina.","Soy la persona a la que todos le cuentan sus problemas.","Cambio la forma de hablar según con quién estoy.","Llego temprano a todos lados y espero que los demás lo noten.","Me cuesta pedir, y más todavía agradecer.","Tengo pocos amigos, y a esos los defendería de cualquier cosa.","Me incomodan los lugares donde nadie me conoce, y sin embargo los busco.","Cuando todos se van, me quedo a levantar las sillas.","Presto cosas y nunca las reclamo."],
+  m:["En mi familia me tocó hacer de mediador{|a}.","En el barrio me conocían por un apodo que no elegí.","Siempre fui {el|la} nuev{o|a} en algún lugar.","Hubo un grupo al que quise pertenecer y que nunca me aceptó.","Me hice cargo de cosas que no me tocaban.","Alguien muy cercano dejó de hablarme un día, y nunca supe por qué."]},
+ {k:"Lugar",sub:"Un espacio que dejó marca.",
+  guia:"Describí el lugar a través de tres objetos y un sonido, como lo recordás o como lo ves, aunque la memoria lo cambie.",
+  p:["Hay una esquina de la ciudad que evito sin saber bien por qué.","Me mudé tantas veces que ya no desarmo las cajas.","Hay un rincón de mi casa donde me siento a pensar.","El lugar donde vivo todavía no se parece a mí.","Desde mi ventana veo algo que miro todos los días."],
+  m:["En una de las casas donde viví había un cuarto al que nadie entraba.","Hay un lugar al que prometí no volver.","Pasé muchas tardes en un lugar que ya no existe.","La ventana del cuarto donde dormía daba a una pared.","En aquel pueblo todos sabían a qué hora salía de casa.","Tenía un escondite que nadie conocía.","Viví un tiempo en una casa que no era mía.","Me acuerdo de cada cosa que había en el camino a la escuela.","Hubo un viaje del que no quería volver.","Había una cocina que era el centro del mundo.","Crecí escuchando un ruido que todavía extraño para dormirme."]},
+ {k:"Voz",sub:"Las palabras heredadas y las propias.",
+  guia:"Escribí con las palabras exactas que se dijeron, aunque suenen torpes o parezcan pavadas. La voz vive en esos detalles.",
+  p:["Hablo de más cuando estoy nervios{o|a}.","Digo «perdón» demasiadas veces por día.","Escribo mejor de lo que hablo.","Me pongo a cantar cuando tengo miedo.","Hay un mensaje que nunca contesté.","Hay un nombre que no puedo pronunciar sin que me cambie la voz.","Hoy dije algo que me sonó a otra persona."],
+  m:["En mi casa había una palabra que nadie más entendía.","Alguien que me crió repetía una frase que ahora digo yo.","Aprendí a mentir con el tono antes que con las palabras.","Hubo una forma de hablar mía que durante años traté de esconder.","Hay una canción que me sé entera sin haberla aprendido nunca.","Lo último que le dije a alguien importante fue una pavada.","Alguien me dijo una frase que me cambió el rumbo, y nunca se enteró."]},
+ {k:"Lo no dicho",sub:"Lo que guardo.",
+  guia:"Dejá que la voz lo diga entero, con todos los detalles, como si fuera la única vez que va a contarlo.",
+  p:["Hay algo que sé de mi familia y nunca pregunté.","Guardo un objeto que debería haber devuelto.","Hay una persona a la que le debo una disculpa.","Tengo un deseo que me da vergüenza decir en voz alta.","Hay algo mío que no le muestro a nadie.","Hay algo que estoy callando estos días."],
+  m:["Alguna vez mentí sobre mi edad, mi nombre o el lugar de donde venía.","Leí algo que no era para mí.","Hice como que no vi.","Me alegré de algo que debería haberme dolido.","Envidié a alguien que quería mucho.","Tuve la valija armada y no me fui.","Me acuerdo de algo que los demás juran que nunca pasó.","Dejé que culparan a otra persona."]},
+ {k:"Umbral",sub:"El momento en que algo cambia.",
+  guia:"Escribí el antes y el después, con un mismo objeto que aparezca en los dos momentos.",
+  p:["Siento que algo está por cambiar.","Estoy en medio de una decisión.","Hace poco dejé algo, y todavía no sé qué va a ocupar su lugar.","Últimamente me reconozco menos en lo que hago."],
+  m:["Ese día dejé de ser quien era.","Desde entonces no volví a confiar del todo.","Fue la primera vez que dije que no.","Supe que tenía que irme.","Alguien me vio como nunca me había visto yo.","Perdí algo, y en su lugar apareció otra cosa.","Esa mañana decidí cambiar de ciudad, de nombre o de vida.","Volví, y ya nada era igual.","Me llamaron por teléfono a una hora en que nadie llama.","Dije la verdad, y el precio fue más alto de lo que pensaba.","Empecé algo sin saber que me iba a llevar años.","Me di cuenta de que me había convertido en lo que juraba no ser.","Un día dejé de esperar."]}
+];
+/* Cartas sumadas en la segunda tanda (se agregan al final de cada mazo). */
+const EXTRA=[
+ {p:["Hay una escena de mi infancia que vuelve sin que la llame.","Esta semana conté una anécdota vieja y me di cuenta de que la cambié.","Últimamente sueño con un lugar donde viví.","Encontré algo guardado que no sabía que conservaba.","Hoy vi a alguien que se parecía a una persona de antes.","Hay un recuerdo que cuento siempre igual, como si lo hubiera aprendido de memoria."],m:[]},
+ {p:["Me gusta que me necesiten, y me agobia que me busquen."],
+  m:["De adolescente me sentía invencible y tenía miedo de todo.","Era la persona más callada de la clase y la que más ruido hacía en casa.","Quería irme lejos, y cada noche volvía a la misma esquina.","Juraba que nunca iba a parecerme a cierta persona, y ya entonces tenía sus gestos."]},
+ {p:["Siento el cansancio en un lugar preciso del cuerpo."],
+  m:["Me acuerdo de la primera vez que me sentí fuerte.","De chic{o|a} no podía quedarme quiet{o|a}, y alguien siempre me lo recordaba.","Una vez el cuerpo reaccionó antes que yo, y me salvó de algo."]},
+ {p:[],m:["De chic{o|a} inventaba reglas secretas y las cumplía sin falta.","Hubo un tiempo en que me creía capaz de adivinar lo que iba a pasar.","Pasé años convencid{o|a} de algo que resultó ser un malentendido.","Una vez tomé una decisión en un segundo, y todavía la sigo pensando.","Había una pregunta que me hacía todas las noches antes de dormirme."]},
+ {p:["Hay una persona que me conoce mejor de lo que me gustaría."],
+  m:["En la escuela me sentaba siempre en el mismo lugar, y sabía por qué.","Hubo alguien que me defendió cuando nadie más lo hizo.","Fui {el|la} primer{o|a} de mi grupo en animarme a algo, y los demás no me lo perdonaron.","Una vez me dejaron afuera de un juego, y aprendí a mirar desde el costado."]},
+ {p:["Hay un banco, una plaza o un bar donde siempre termino.","Conozco de memoria el camino que hago todos los días, y aun así hoy vi algo nuevo.","Hay un lugar al que voy cuando necesito que nadie me encuentre.","En mi casa hay un objeto que ocupa más lugar del que debería.","Hay una ciudad donde nunca estuve y que siento como propia."],m:[]},
+ {p:["Tengo una muletilla que me delata.","Hay una pregunta que me hacen seguido y todavía no sé contestar.","Cuando me enojo, hablo como alguien de mi familia."],
+  m:["De chic{o|a} inventé una palabra que solamente entendía yo.","Me acuerdo de la voz de alguien diciendo mi nombre.","Hubo una conversación que ensayé muchas veces y nunca tuve."]},
+ {p:["Hay una pregunta que tengo ganas de hacer y no me animo.","Finjo que algo me da igual.","Sé algo de una persona cercana que ella no sabe que sé.","Tengo una opinión que nunca digo en voz alta."],
+  m:["Una vez abrí algo que estaba cerrado por una razón.","Nunca conté cómo terminó aquella historia."]},
+ {p:["Estoy esperando una respuesta que va a cambiar algo.","Hoy me animé a algo por primera vez.","Hay algo que empecé y no sé si voy a poder terminar.","Últimamente tengo ganas de irme, aunque no sé adónde.","Me estoy despidiendo de algo, de a poco.","Esta semana alguien me dijo algo que me dejó pensando en quién soy."],m:[]}
+];
+PUERTAS.forEach((P,i)=>{P.p.push(...EXTRA[i].p);P.m.push(...EXTRA[i].m);});
+const ROM=["I","II","III","IV","V","VI","VII","VIII","IX"];
+const KEY="tres-cartas-diario-v1";
+const CUANDO={hoy:"Hoy",dias:"Estos días",recuerdo:"Un recuerdo"};
+const quien=e=>(e.voz||"yo")==="yo"?"Yo":((e.nombre||"").trim()||"Personaje sin nombre");
+
+function estadoInicial(){return{g:"m",tab:"escribir",tiempo:"ambos",sig:0,usadas:{},entradas:[],orden:"escritura",filtro:"todas",abierta:null,borrador:null};}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+if(!S||!Array.isArray(S.entradas))S=estadoInicial();
+function guardar(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gen=t=>t.replace(/\{([^|}]*)\|([^}]*)\}/g,(m,a,b)=>S.g==="f"?b:a);
+const texto=c=>c.blank!=null?c.blank:gen(PUERTAS[c.pu][c.t][c.i]);
+const palabras=t=>(t.trim().match(/\S+/g)||[]).length;
+const hoyISO=()=>new Date().toISOString();
+const fechaLarga=iso=>{try{return new Date(iso).toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}catch(e){return iso.slice(0,10)}};
+const fechaCorta=iso=>{try{return new Date(iso).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"})}catch(e){return iso.slice(0,10)}};
+
+/* reparto: 3 cartas de la puerta, según el tiempo elegido, sin repetir hasta agotar */
+function repartir(pu){
+  const P=PUERTAS[pu],tipos=S.tiempo==="ambos"?["p","m"]:[S.tiempo];
+  let todas=[];tipos.forEach(t=>P[t].forEach((_,i)=>todas.push({pu,t,i})));
+  const id=c=>c.pu+c.t+c.i;
+  const usadas=S.usadas[pu]||[];
+  let pool=todas.filter(c=>!usadas.includes(id(c)));
+  if(pool.length<3){S.usadas[pu]=usadas.filter(u=>!todas.some(c=>id(c)===u));pool=todas.slice();}
+  for(let a=pool.length-1;a>0;a--){const b=Math.floor(Math.random()*(a+1));[pool[a],pool[b]]=[pool[b],pool[a]];}
+  const mano=pool.slice(0,3);
+  S.usadas[pu]=(S.usadas[pu]||[]).concat(mano.map(id));
+  return mano;
+}
+function nuevoBorrador(pu){
+  S.borrador={pu,mano:repartir(pu),elegida:null,mezclas:3,escribiendoBlanca:false,blank:"",origen:null,texto:"",margen:"",cuando:null,epoca:"",edad:"",voz:"personaje",nombre:""};
+}
+function cuandoPorDefecto(c){if(c.blank!=null)return"dias";return c.t==="m"?"recuerdo":"dias";}
+if(!S.borrador)nuevoBorrador(S.sig);
+
+const app=document.getElementById("app");
+
+function renderTop(){
+  document.getElementById("tab-escribir").setAttribute("aria-pressed",S.tab==="escribir");
+  document.getElementById("tab-cuaderno").setAttribute("aria-pressed",S.tab!=="escribir");
+  document.getElementById("cnt").textContent=S.entradas.length||"";
+  document.getElementById("g-m").setAttribute("aria-pressed",S.g==="m");
+  document.getElementById("g-f").setAttribute("aria-pressed",S.g==="f");
+}
+function render(){
+  renderTop();
+  if(S.tab==="escribir")renderEscribir();
+  else if(S.abierta)renderEntrada();
+  else renderCuaderno();
+}
+
+function cartaHTML(c,attrs){
+  const P=PUERTAS[c.pu];
+  return `<button type="button" class="carta" ${attrs}><span class="esq"><span>${ROM[c.pu]} · ${P.k}</span><span>${c.t==="m"?"memoria":"presente"}</span></span><span class="frase">${esc(texto(c))}</span><span class="pie">✦</span></button>`;
+}
+
+function renderEscribir(){
+  const B=S.borrador,P=PUERTAS[B.pu];
+  const cuenta=pu=>S.entradas.filter(e=>e.carta.pu===pu).length;
+  let h=`<nav class="puertas" aria-label="Puertas">${PUERTAS.map((x,i)=>`<button type="button" data-puerta="${i}" class="${B.pu===i?"cur":""}"><span class="n">${ROM[i]}</span><span class="t">${x.k}</span><span class="c">${cuenta(i)?cuenta(i)+(cuenta(i)===1?" texto":" textos"):"&nbsp;"}</span></button>`).join("")}</nav>`;
+  if(B.elegida===null){
+    h+=`<div class="head"><div><div class="eyebrow">Puerta ${ROM[B.pu]} de IX</div><h2>${P.k}</h2><p class="sub">${P.sub}</p></div>
+      <div class="tiempo"><span class="lbl">Cartas de</span><span class="seg" role="group" aria-label="Tiempo de las cartas">
+      ${[["ambos","todo"],["p","presente"],["m","memoria"]].map(([v,l])=>`<button type="button" data-tiempo="${v}" aria-pressed="${S.tiempo===v}">${l}</button>`).join("")}</span></div></div>`;
+    if(B.escribiendoBlanca){
+      h+=`<div class="mesa"><div class="blanca-grid"><div class="blanca"><div class="carta"><span class="esq"><span>${ROM[B.pu]} · ${P.k}</span><span>en blanco</span></span>
+        <textarea id="blank" aria-label="Tu propia carta" placeholder="Escribí tu propia carta, o partí de una de las tres y cambiala…">${esc(B.blank)}</textarea><span class="pie">✦</span></div></div>
+        <div class="ref"><h3>Las cartas que te tocaron</h3><p class="s">Si una te sugirió otra frase, copiala en la carta en blanco y cambiala: «El frío me cambia el humor» puede volverse «El calor me cambia el humor».</p>
+        <ul>${B.mano.map((c,i)=>`<li class="${B.origen===i?"on":""}"><span>${esc(texto(c))}</span><button class="link" type="button" data-partir="${i}">${B.origen===i?"partiste de esta":"partir de esta"}</button></li>`).join("")}</ul></div></div>
+        <div class="herr"><button class="btn" type="button" data-act="cancelBlanca">Volver a las tres</button><button class="btn pri" type="button" data-act="usarBlanca">Escribir con esta</button></div></div>`;
+    }else{
+      h+=`<div class="mesa"><div class="cartas">${B.mano.map((c,i)=>cartaHTML(c,`data-elegir="${i}" aria-label="Elegir: ${esc(texto(c))}"`)).join("")}</div>
+        <div class="herr"><button class="btn" type="button" data-act="mezclar" ${B.mezclas<1?"disabled":""}>Mezclar de nuevo · ${B.mezclas===1?"queda 1":"quedan "+B.mezclas}</button>
+        <button class="btn" type="button" data-act="blanca">Carta en blanco</button></div>
+        <p class="hint">Quedate con una. Las otras dos pasan de largo. Si alguna te sugiere otra frase, escribila en la carta en blanco. Si ninguna te corresponde, mezclá de nuevo.</p></div>`;
+    }
+  }else{
+    const c=B.elegida,otras=B.mano.filter((_,i)=>B.idx>=0?i!==B.idx:i!==B.origen);
+    h+=`<article class="pagina">
+      <p class="fecha"><small>Puerta ${ROM[B.pu]}</small>${P.k}</p>
+      <p class="epigrafe">${esc(texto(c))}</p>
+      ${c.desde?`<p class="desde">Variación de <span>«${esc(c.desde)}»</span></p>`:""}
+      <p class="guia">Tomá la carta como la primera frase de alguien y seguí hablando con esa voz. Puede ser la tuya, o la de un personaje cuyo rol asumís mientras escribís. ${P.guia} <i>Si la carta no te corresponde, dásela a un personaje, o volvé a las cartas y mezclá de nuevo.</i></p>
+      ${vozHTML(B)}
+      ${cuandoHTML(B)}
+      <label class="lbl" for="texto" style="display:block;margin-bottom:6px">Escribí con esa voz</label>
+      <textarea class="renglones" id="texto" placeholder="Empezá por lo primero que aparezca…">${esc(B.texto)}</textarea>
+      <div class="margen"><label for="margen">Al margen: por qué esta carta (opcional)</label><input class="corto" id="margen" value="${esc(B.margen)}" placeholder="Una línea alcanza."></div>
+      ${otras.length?`<p class="pasaron">Pasaron de largo: ${otras.map(o=>`<span>«${esc(texto(o))}»</span>`).join(" · ")}</p>`:""}
+      <div class="pie-pagina"><span class="cuenta" id="cuenta">${palabras(B.texto)} palabras</span>
+        <span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">${B.texto.trim()===""?`<button class="link" type="button" data-act="rehacer">volver a las cartas</button>`:""}
+        <span class="aviso" id="aviso" role="status"></span>
+        <button class="btn pri" type="button" data-act="guardarPagina">Guardar</button></span></div>
+    </article>`;
+  }
+  app.innerHTML=h;
+}
+function vozHTML(B){
+  const v=B.voz||"yo",nombres=[...new Set(S.entradas.map(e=>(e.nombre||"").trim()).filter(Boolean))];
+  return `<div class="cuando"><span class="lbl">Quién habla</span><span class="seg" role="group" aria-label="Quién habla">
+    <button type="button" data-voz="yo" aria-pressed="${v==="yo"}">yo</button><button type="button" data-voz="personaje" aria-pressed="${v==="personaje"}">un personaje</button></span>
+    <span class="extra" id="extraVoz" ${v==="personaje"?"":"hidden"}><input class="corto" id="nombre" list="nombres" value="${esc(B.nombre||"")}" placeholder="Nombre, si ya lo tiene" aria-label="Nombre del personaje">
+    <datalist id="nombres">${nombres.map(n=>`<option value="${esc(n)}">`).join("")}</datalist></span></div>`;
+}
+function cuandoHTML(B){
+  return `<div class="cuando"><span class="lbl">Cuándo pasa</span><span class="seg" role="group" aria-label="Cuándo pasa">
+    ${Object.entries(CUANDO).map(([v,l])=>`<button type="button" data-cuando="${v}" aria-pressed="${B.cuando===v}">${l}</button>`).join("")}</span>
+    <span class="extra" ${B.cuando==="recuerdo"?"":"hidden"} id="extra">
+      <input class="corto" id="epoca" value="${esc(B.epoca)}" placeholder="Año o época: 1994, la primaria…" aria-label="Año o época">
+      <input class="corto edad" id="edad" value="${esc(B.edad)}" inputmode="numeric" placeholder="Tenía… años" aria-label="Edad que tenía"></span></div>`;
+}
+
+/* cuaderno */
+function anioDe(e){
+  if(e.cuando!=="recuerdo")return new Date(e.fecha).getFullYear();
+  const m=(e.epoca||"").match(/\b(1[89]\d\d|20\d\d)\b/);return m?+m[1]:null;
+}
+function renderCuaderno(){
+  let es=S.entradas.filter(e=>S.filtro==="todas"||(S.filtro==="presente"?e.cuando!=="recuerdo":S.filtro==="memoria"?e.cuando==="recuerdo":e.carta.pu===+S.filtro));
+  const total=S.entradas.reduce((a,e)=>a+palabras(e.texto),0);
+  let h=`<div class="head"><div><div class="eyebrow">${S.entradas.length} ${S.entradas.length===1?"texto":"textos"} · ${total.toLocaleString("es-AR")} palabras</div><h2>Escritos</h2></div></div>
+   <div class="filtros"><span class="tiempo"><span class="lbl">Leer</span><span class="seg" role="group" aria-label="Orden">
+     <button type="button" data-orden="escritura" aria-pressed="${S.orden==="escritura"}">por fecha</button>
+     <button type="button" data-orden="voz" aria-pressed="${S.orden==="voz"}">por voz</button>
+     <button type="button" data-orden="vivido" aria-pressed="${S.orden==="vivido"}">por tiempo del relato</button></span></span>
+     <label class="tiempo"><span class="lbl">Mostrar</span><select id="filtro">
+      <option value="todas">todos los textos</option><option value="presente">solo el presente</option><option value="memoria">solo recuerdos</option>
+      ${PUERTAS.map((p,i)=>`<option value="${i}">${ROM[i]} · ${p.k}</option>`).join("")}</select></label></div>`;
+  if(!S.entradas.length){
+    h+=`<div class="vacio">Todavía no hay textos. Elegí una carta en «Escribir» y el primero va a aparecer acá.</div>`;
+  }else if(!es.length){
+    h+=`<div class="vacio">Ningún texto coincide con este filtro.</div>`;
+  }else{
+    grupos(es).forEach(g=>{h+=`<section class="grupo"><h3>${esc(g.t)}${g.s?`<small>${esc(g.s)}</small>`:""}</h3>${g.items.map(filaHTML).join("")}</section>`});
+    h+=`<div class="acciones"><button class="btn pri" type="button" data-act="copiarTodo">Copiar los escritos</button><span class="aviso" id="aviso" role="status"></span></div>
+      <textarea id="copia" class="corto" style="margin-top:14px;min-height:160px" hidden aria-label="Texto de los escritos"></textarea>`;
+  }
+  app.innerHTML=h;
+  const f=document.getElementById("filtro");if(f)f.value=S.filtro;
+}
+function grupos(es){
+  if(S.orden==="voz"){
+    const m=new Map();es.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha)).forEach(e=>{const k=quien(e);if(!m.has(k))m.set(k,[]);m.get(k).push(e)});
+    return [...m].sort((a,b)=>a[0]==="Yo"?-1:b[0]==="Yo"?1:a[0].localeCompare(b[0],"es")).map(([t,items])=>({t,s:items.length+(items.length===1?" texto":" textos"),items}));
+  }
+  if(S.orden==="escritura"){
+    const o=es.slice().sort((a,b)=>b.fecha.localeCompare(a.fecha)),m=new Map();
+    o.forEach(e=>{let k;try{k=new Date(e.fecha).toLocaleDateString("es-AR",{month:"long",year:"numeric"})}catch(x){k=e.fecha.slice(0,7)}k=k.charAt(0).toUpperCase()+k.slice(1);if(!m.has(k))m.set(k,[]);m.get(k).push(e)});
+    return [...m].map(([t,items])=>({t,items}));
+  }
+  const conAnio=es.filter(e=>anioDe(e)!==null).sort((a,b)=>anioDe(a)-anioDe(b)||a.fecha.localeCompare(b.fecha));
+  const m=new Map();conAnio.forEach(e=>{const k=anioDe(e);if(!m.has(k))m.set(k,[]);m.get(k).push(e)});
+  const out=[...m].map(([t,items])=>({t:String(t),items}));
+  const porEdad=es.filter(e=>anioDe(e)===null&&e.edad).sort((a,b)=>(+a.edad||0)-(+b.edad||0));
+  const sinNada=es.filter(e=>anioDe(e)===null&&!e.edad);
+  if(porEdad.length)out.push({t:"Recuerdos por edad",s:"sin año anotado",items:porEdad});
+  if(sinNada.length)out.push({t:"Recuerdos sin fecha",s:"anotales año o edad para ubicarlos",items:sinNada});
+  return out;
+}
+function cuandoTexto(e){
+  if(e.cuando!=="recuerdo")return CUANDO[e.cuando]||"";
+  return [e.epoca&&e.epoca.trim(),e.edad&&`a los ${e.edad}`].filter(Boolean).join(", ")||"Un recuerdo";
+}
+function filaHTML(e){
+  return `<button type="button" class="entrada" data-abrir="${e.id}"><span class="meta"><b>${ROM[e.carta.pu]} · ${PUERTAS[e.carta.pu].k}</b>${esc(quien(e))}<br>${esc(fechaCorta(e.fecha))} · ${esc(cuandoTexto(e))}</span>
+    <span><p class="ef">${esc(texto(e.carta))}</p><p class="ex">${e.texto.trim()?esc(e.texto.trim()):"<i>Sin texto.</i>"}</p></span></button>`;
+}
+function renderEntrada(){
+  const e=S.entradas.find(x=>x.id===S.abierta);if(!e){S.abierta=null;return renderCuaderno();}
+  const P=PUERTAS[e.carta.pu];
+  app.innerHTML=`<div class="head"><div><button class="link" type="button" data-act="alCuaderno">← Volver a los escritos</button></div></div>
+   <article class="pagina">
+    <p class="fecha"><small>Puerta ${ROM[e.carta.pu]} · escrito el ${esc(fechaLarga(e.fecha))}</small>${P.k}</p>
+    <p class="epigrafe">${esc(texto(e.carta))}</p>
+    ${e.carta.desde?`<p class="desde">Variación de <span>«${esc(e.carta.desde)}»</span></p>`:""}
+    ${vozHTML(e)}
+    ${cuandoHTML(e)}
+    <textarea class="renglones" id="texto" aria-label="Texto">${esc(e.texto)}</textarea>
+    <div class="margen"><label for="margen">Al margen</label><input class="corto" id="margen" value="${esc(e.margen)}" placeholder="Por qué esta carta."></div>
+    ${e.pasaron.length?`<p class="pasaron">Pasaron de largo: ${e.pasaron.map(o=>`<span>«${esc(texto(o))}»</span>`).join(" · ")}</p>`:""}
+    <div class="pie-pagina"><span class="cuenta" id="cuenta">${palabras(e.texto)} palabras · los cambios se guardan solos</span>
+      <span id="borrar"><button class="btn" type="button" data-act="borrar">Borrar texto</button></span></div>
+   </article>`;
+}
+
+function textoCuaderno(){
+  const es=S.entradas.slice();let t="TRES CARTAS · ESCRITOS\n";
+  grupos(es).forEach(g=>{t+=`\n\n== ${g.t} ==\n`;g.items.forEach(e=>{
+    t+=`\n${quien(e)} · ${PUERTAS[e.carta.pu].k} · ${cuandoTexto(e)} · escrito el ${fechaLarga(e.fecha)}\n«${texto(e.carta)}»${e.carta.desde?` (variación de «${e.carta.desde}»)`:""}\n\n${e.texto.trim()}\n`;
+    if(e.margen.trim())t+=`(Al margen: ${e.margen.trim()})\n`;})});
+  return t;
+}
+
+/* eventos */
+document.addEventListener("click",ev=>{
+  const q=s=>ev.target.closest(s);let el;
+  if(el=q("[data-g]")){S.g=el.dataset.g;guardar();render();return;}
+  if(el=q("[data-tab]")){S.tab=el.dataset.tab;S.abierta=null;guardar();render();return;}
+  if(el=q("[data-puerta]")){const B=S.borrador;const pu=+el.dataset.puerta;
+    if(B.elegida&&B.texto.trim()&&pu!==B.pu){const a=document.getElementById("aviso");if(a)a.textContent="Guardá este texto antes de abrir otra puerta.";return;}
+    nuevoBorrador(pu);guardar();render();return;}
+  if(el=q("[data-tiempo]")){S.tiempo=el.dataset.tiempo;nuevoBorrador(S.borrador.pu);guardar();render();return;}
+  if(el=q("[data-orden]")){S.orden=el.dataset.orden;guardar();render();return;}
+  if(el=q("[data-abrir]")){S.abierta=el.dataset.abrir;guardar();render();window.scrollTo({top:0});return;}
+  if(el=q("[data-partir]")){const B=S.borrador,i=+el.dataset.partir;B.origen=i;B.blank=texto(B.mano[i]);guardar();render();
+    const t=document.getElementById("blank");if(t){t.focus();t.setSelectionRange(t.value.length,t.value.length);}return;}
+  if(el=q("[data-voz]")){
+    const tgt=S.tab==="escribir"?S.borrador:S.entradas.find(x=>x.id===S.abierta);if(!tgt)return;
+    tgt.voz=el.dataset.voz;guardar();
+    el.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===el));
+    document.getElementById("extraVoz").hidden=tgt.voz!=="personaje";return;}
+  if(el=q("[data-cuando]")){
+    const tgt=S.tab==="escribir"?S.borrador:S.entradas.find(x=>x.id===S.abierta);if(!tgt)return;
+    tgt.cuando=el.dataset.cuando;guardar();
+    el.parentElement.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b===el));
+    document.getElementById("extra").hidden=tgt.cuando!=="recuerdo";return;}
+  if(el=q("[data-elegir]")){
+    const B=S.borrador,i=+el.dataset.elegir;
+    app.querySelectorAll(".carta[data-elegir]").forEach(c=>{c.classList.add(c===el?"in":"out");c.disabled=true});
+    const quiet=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(()=>{B.elegida=B.mano[i];B.idx=i;B.cuando=cuandoPorDefecto(B.elegida);guardar();render();const t=document.getElementById("texto");if(t)t.focus({preventScroll:true});},quiet?0:430);
+    return;}
+  if(!(el=q("[data-act]")))return;
+  const B=S.borrador;
+  switch(el.dataset.act){
+    case"mezclar":if(B.mezclas>0){const m=B.mezclas-1;nuevoBorrador(B.pu);S.borrador.mezclas=m;}break;
+    case"blanca":B.escribiendoBlanca=true;break;
+    case"cancelBlanca":B.escribiendoBlanca=false;break;
+    case"usarBlanca":if(!B.blank.trim()){document.getElementById("blank").focus();return;}
+      B.elegida={pu:B.pu,t:"p",i:0,blank:B.blank.trim()};if(B.origen!=null&&B.mano[B.origen])B.elegida.desde=texto(B.mano[B.origen]);B.idx=-1;B.escribiendoBlanca=false;B.cuando="dias";break;
+    case"rehacer":B.elegida=null;B.idx=null;break;
+    case"guardarPagina":{
+      if(!B.texto.trim()){document.getElementById("aviso").textContent="Todavía no escribiste nada.";document.getElementById("texto").focus();return;}
+      const otras=B.mano.filter((_,i)=>B.idx>=0?i!==B.idx:i!==B.origen);
+      S.entradas.push({id:"e"+Date.now(),fecha:hoyISO(),carta:B.elegida,pasaron:otras,texto:B.texto,margen:B.margen,cuando:B.cuando||"dias",epoca:B.epoca,edad:B.edad,voz:B.voz,nombre:(B.nombre||"").trim()});
+      S.sig=(B.pu+1)%PUERTAS.length;nuevoBorrador(S.sig);guardar();render();
+      window.scrollTo({top:0});
+      const h=app.querySelector(".head .eyebrow");if(h)h.textContent=`Texto guardado en Escritos · la próxima puerta es ${PUERTAS[S.sig].k}`;
+      return;}
+    case"alCuaderno":S.abierta=null;break;
+    case"borrar":document.getElementById("borrar").innerHTML=`<span class="confirmar">¿Borrar este texto para siempre? <button class="btn peligro" type="button" data-act="borrarSi">Sí, borrar</button><button class="link" type="button" data-act="borrarNo">cancelar</button></span>`;return;
+    case"borrarNo":document.getElementById("borrar").innerHTML=`<button class="btn" type="button" data-act="borrar">Borrar texto</button>`;return;
+    case"borrarSi":S.entradas=S.entradas.filter(x=>x.id!==S.abierta);S.abierta=null;break;
+    case"copiarTodo":{
+      const t=textoCuaderno(),av=document.getElementById("aviso"),ta=document.getElementById("copia");
+      const fb=()=>{ta.hidden=false;ta.value=t;ta.focus();ta.select();av.textContent="Seleccioné el texto: copialo con Ctrl+C o ⌘C.";};
+      try{navigator.clipboard.writeText(t).then(()=>{av.textContent="Escritos copiados.";},fb);}catch(x){fb();}
+      return;}
+  }
+  guardar();render();
+});
+document.addEventListener("change",ev=>{if(ev.target.id==="filtro"){S.filtro=ev.target.value;guardar();render();}});
+document.addEventListener("input",ev=>{
+  const t=ev.target,tgt=S.tab==="escribir"?S.borrador:S.entradas.find(x=>x.id===S.abierta);if(!tgt)return;
+  if(t.id==="blank")tgt.blank=t.value;
+  else if(t.id==="texto"){tgt.texto=t.value;const c=document.getElementById("cuenta");if(c)c.textContent=palabras(t.value)+" palabras"+(S.tab==="escribir"?"":" · los cambios se guardan solos");}
+  else if(t.id==="margen")tgt.margen=t.value;
+  else if(t.id==="epoca")tgt.epoca=t.value;
+  else if(t.id==="nombre")tgt.nombre=t.value;
+  else if(t.id==="edad")tgt.edad=t.value.replace(/\D/g,"");
+  guardar();
+});
+render();
+</script>
+
+</body></html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.png">
+<title>Juegos Lunantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Raleway:wght@500;600;700&display=swap">
+<style>
+/* Layout: cada juego es un panel teñido con el color de su propia app, con la fase lunar a la izquierda y la miniatura de su pantalla a la derecha. Tema único claro, el de la marca. */
+:root{
+  color-scheme:light;
+  --bg:#f4f2ed; --surface:#fbfaf7; --ink:#1a2744; --muted:#5b6680; --line:#d8dbe2;
+  --moon:#efe6cc; --moon-dark:#2f3d63;
+  --display:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --ui:"Raleway", "Segoe UI", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--display);font-size:19px;line-height:1.45}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* Portada */
+.hub{max-width:1000px;margin:0 auto;padding-inline:16px;padding-block:44px 56px;display:flex;flex-direction:column;gap:34px}
+.top{display:flex;flex-direction:column;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;margin:0;font-weight:400;color:var(--ink)}
+.brand img{height:clamp(56px,10vw,76px);width:auto;display:block}
+.brand .words{display:flex;flex-direction:column;line-height:1.02;text-transform:uppercase}
+.brand .l1{font-size:clamp(.95rem,2.4vw,1.25rem);letter-spacing:.32em;opacity:.85}
+.brand .l2{font-size:clamp(2rem,6.4vw,3.1rem);letter-spacing:.2em}
+.lede{margin:0;max-width:58ch;color:var(--muted);font-size:1.15rem}
+
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.game{
+  --tint:#eef0de; --c:#243560;
+  background:var(--tint);border-radius:18px;padding:26px 28px;
+  display:grid;grid-template-columns:52px minmax(0,1fr) minmax(0,310px);
+  grid-template-areas:"moon head thumb" "moon body thumb" ". acts thumb" "steps steps steps";
+  column-gap:20px;align-items:start;
+}
+.moon{grid-area:moon;width:52px;height:52px;border-radius:50%;background:var(--c);display:grid;place-items:center}
+.moon svg{width:36px;height:36px;display:block}
+.ghead{grid-area:head;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px}
+.ghead h2{font-weight:700;font-size:1.85rem;line-height:1.1;margin:0}
+.ghead .alt{font-style:italic;color:var(--muted);font-size:1.1rem}
+.body{grid-area:body;padding-top:4px}
+.works{font-family:var(--ui);font-weight:700;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.line{margin:4px 0 0;max-width:52ch}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{font-family:var(--ui);font-weight:500;font-size:.74rem;padding:3px 10px;border-radius:999px;color:var(--ink);background:color-mix(in srgb,var(--surface) 75%,transparent);border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
+.chip.save{border-color:color-mix(in srgb,var(--c) 55%,transparent)}
+.acts{grid-area:acts;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}
+.btn{font-family:var(--ui);font-weight:700;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:10px 22px;cursor:pointer;border:0;background:var(--c);color:#fff}
+.btn:hover{filter:brightness(1.18)}
+.how{font-family:var(--ui);font-weight:600;font-size:.82rem;background:none;border:0;padding:6px 2px;cursor:pointer;color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-color:color-mix(in srgb,var(--c) 40%,transparent)}
+.how:hover{text-decoration-color:var(--ink)}
+.thumb{grid-area:thumb;justify-self:end;width:100%;padding:0;border:0;background:none;cursor:pointer;border-radius:10px;transform:rotate(var(--tilt,1.4deg));transition:transform .25s ease}
+.thumb img{display:block;width:100%;height:auto;aspect-ratio:720/495;object-fit:cover;object-position:top;border-radius:10px;border:1px solid color-mix(in srgb,var(--c) 25%,transparent);box-shadow:0 2px 4px rgba(26,39,68,.08),0 18px 34px -16px rgba(26,39,68,.45)}
+.thumb:hover{transform:rotate(0deg) translateY(-3px)}
+.game:nth-child(even) .thumb{--tilt:-1.4deg}
+.steps-wrap{grid-area:steps;margin-top:20px;padding:18px 22px;background:var(--surface);border-radius:12px;max-width:72ch}
+.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
+.steps li::marker{font-family:var(--ui);font-weight:700;font-size:.8rem;color:var(--c)}
+.note{margin:12px 0 0;padding-top:12px;border-top:1px dashed var(--line);font-size:.98rem;color:var(--muted);font-style:italic}
+footer{font-family:var(--ui);font-size:.76rem;line-height:1.7;color:var(--muted);letter-spacing:.02em}
+
+.feature{--c:#e3b44c;--tint:#1a2744;color:#f1eee6;padding-block:30px}
+.feature .moon{background:#2b3b66}
+.feature .ghead h2{font-size:2.1rem}
+.feature .works{color:#e3b44c}
+.feature .line{color:#e4e2dc}
+.feature .chip{background:rgba(255,255,255,.06);color:#f1eee6;border-color:rgba(255,255,255,.22)}
+.feature .btn{color:#1a2744}
+.feature .how{color:#f1eee6;text-decoration-color:rgba(255,255,255,.35)}
+.feature .how:hover{text-decoration-color:#fff}
+.feature .thumb img{border-color:rgba(255,255,255,.2);box-shadow:0 18px 40px -14px rgba(0,0,0,.6)}
+.feature .steps-wrap{color:var(--ink)}
+.feature .steps li::marker{color:#9a7419}
+.section-label{font-family:var(--ui);font-weight:700;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:10px 0 -18px}
+@media (max-width:700px){
+  .game{grid-template-columns:44px minmax(0,1fr);grid-template-areas:"thumb thumb" "moon head" "moon body" "acts acts" "steps steps";padding:18px 18px 22px;column-gap:14px}
+  .thumb{justify-self:stretch;margin-bottom:18px;--tilt:0deg!important;transform:none}
+  .game:nth-child(even) .thumb{--tilt:0deg}
+  .moon{width:44px;height:44px}.moon svg{width:30px;height:30px}
+  .ghead h2{font-size:1.6rem}
+}
+@media (prefers-reduced-motion:reduce){.thumb{transition:none}}
+
+/* Juego abierto */
+.player{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--bg);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bar{--c:var(--ink);flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--c);color:#fff;position:relative}
+.bar .back{font-family:var(--ui);font-weight:600;font-size:.8rem;background:none;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 12px;cursor:pointer;color:#fff;white-space:nowrap}
+.bar .back:hover{border-color:#fff}
+.bar .now{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.bar .now svg{width:22px;height:22px;flex:none}
+.bar .now b{font-family:var(--display);font-style:italic;font-weight:600;font-size:1.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .tool{font-family:var(--ui);font-weight:600;font-size:.78rem;background:none;border:0;color:#fff;cursor:pointer;padding:6px 8px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.4);white-space:nowrap}
+.bar :focus-visible{outline-color:#fff}
+.pop{position:absolute;top:100%;right:8px;left:8px;margin-left:auto;max-width:520px;z-index:5;margin-top:6px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:0 18px 40px -16px rgba(10,16,32,.45);max-height:70vh;overflow:auto}
+.pop h3{margin:0 0 8px;font-size:1.25rem;font-weight:700}
+.pop .close{float:right;font-family:var(--ui);font-weight:600;font-size:.75rem;background:none;border:0;cursor:pointer;color:var(--muted);text-decoration:underline}
+.pop .steps li::marker{color:var(--ink)}
+.frames{flex:1;position:relative;min-height:0}
+.frames iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg)}
+@media (max-width:520px){ .bar .open-label,.bar .back-label,.bar .now svg{display:none} .bar{gap:6px} }
+</style>
+</head>
+<body>
+
+<div class="hub" id="hub">
+  <header class="top">
+    <h1 class="brand" aria-label="Juegos Lunantes"><img src="lunantes-luna.png" alt="" width="79" height="82"><span class="words"><span class="l1">Juegos</span><span class="l2">Lunantes</span></span></h1>
+    <p class="lede">Un test para reconocer cómo escribís y cinco juegos de escritura, para jugar solo o en grupo, ordenados como las fases de la luna, desde la carta suelta que dispara unas líneas hasta la historia completa que se arma y se cuenta en grupo.</p>
+  </header>
+  <div class="list" id="feature"></div>
+  <h2 class="section-label">Los juegos</h2>
+  <ol class="list" id="list"></ol>
+  <footer>Taller de Lunantes · Emilio Moyano<br>© 2026 Emilio Moyano. Todos los derechos reservados.</footer>
+</div>
+
+<section class="player" id="player" hidden aria-label="Juego">
+  <div class="bar" id="bar">
+    <button class="back" id="back" type="button" aria-label="Volver a Juegos Lunantes">←<span class="back-label"> Juegos</span></button>
+    <span class="now" id="now"></span>
+    <button class="tool" id="howBtn" type="button" aria-expanded="false" aria-controls="pop">Cómo se juega</button>
+    <a class="tool" id="openNew" href="#" target="_blank" rel="noopener" title="Abrir en una pestaña nueva">↗<span class="open-label"> Pantalla completa</span></a>
+    <div class="pop" id="pop" hidden></div>
+  </div>
+  <div class="frames" id="frames"></div>
+</section>
+
+<script>
+/* c: color de la app (botones, luna, barra). tint: fondo del panel. */
+const GAMES=[
+ {id:"cartas-lunantes",name:"Cartas Lunantes",works:"Disparador",phase:.18,c:"#2f4170",tint:"#ebeedb",
+  line:"Una carta al azar con una instrucción, una imagen, un verso, una pregunta o una palabra rara, y unos minutos para escribir lo primero que aparezca.",
+  steps:["Tocá «Comenzar» para recibir una carta al azar, o entrá en «Elegir categoría» si preferís un tipo de carta: versos, refranes, imágenes, preguntas, palabras, oráculos, estrategias o absurdas.","Tocá la carta para darla vuelta.","Escribí lo primero que surja, en tu cuaderno o en un documento, sin pensar demasiado y sin corregir mientras escribís.","Cuando quieras otra carta, tocá «nuevo juego»."]},
+ {id:"tres-cartas",name:"Tres cartas",works:"Voz",phase:.36,saves:true,c:"#9b2a3a",tint:"#f1e3e2",
+  line:"Tres frases en primera persona para elegir una y seguir hablando con esa voz, que puede ser la tuya o la de un personaje que empezás a jugar.",
+  steps:["Elegí una de las nueve puertas (Recuerdo, Contradicción, Cuerpo, Mente, Los otros, Lugar, Voz, Lo no dicho, Umbral) y, si querés, el tiempo de las cartas: presente, memoria o todo.","De las tres cartas que te tocan, quedate con una. Si ninguna te dice algo, podés mezclar de nuevo hasta tres veces o escribir tu propia carta en blanco.","Tomá la carta como la primera frase de alguien y seguí escribiendo con esa voz. Podés marcar quién habla y cuándo pasa lo que contás.","Guardá el texto, que pasa a «Escritos», donde podés releerlo por fecha, por voz o por el tiempo del relato."],
+  note:"Lo que escribís queda guardado en este navegador y en este dispositivo, así que no aparece si abrís el juego desde el celular o desde otra computadora. Para conservarlo, usá «Copiar los escritos» y pegalo en tu documento."},
+ {id:"fichero-de-personajes",name:"Fichero de personajes",works:"Personaje",phase:.5,saves:true,c:"#27508c",tint:"#e2e8ec",
+  line:"Tres semillas sorteadas, una serie de preguntas para responder con tus palabras y una consigna para escribir la primera escena.",
+  steps:["Elegí el registro (realista, policial, fantástico, histórico o una mezcla) y si el personaje es femenino o masculino.","Mirá las tres semillas: un oficio, algo que lleva siempre consigo y un rasgo más, que puede ser un secreto, un deseo, un miedo, una herida o una rareza. Tirá el dado sobre la que no te diga nada.","Poné nombre y edad, o pedí una sugerencia, y respondé las preguntas. Si una pregunta no te sirve, cambiala con el dado, y si querés más, sumá otra.","Escribí la primera escena a partir de la consigna del final y copiá la ficha para llevarla a tu documento."],
+  note:"La ficha queda guardada en este navegador mientras trabajás. Para conservarla, usá «Copiar ficha» y pegala en tu documento."},
+ {id:"jack-plot",name:"Jack Plot",alt:"Disparador de tramas",works:"Trama",phase:.74,c:"#171b33",tint:"#ece4cf",
+  line:"Una máquina de tres rodillos que combina un personaje, un escenario y un giro inspirado en las treinta y seis situaciones dramáticas de Georges Polti.",
+  steps:["Bajá la palanca arrastrándola, tocala o apretá la barra espaciadora.","Esperá a que se detengan los tres rodillos: personaje, escenario y giro.","Escribí una historia que reúna las tres cosas y dejá que el giro ponga en marcha la trama.","Copiá la trama si querés guardarla y bajá la palanca otra vez cuando necesites otra. Los rodillos no repiten hasta agotar cada lista."]},
+ {id:"peripecias",name:"Peripecias",works:"Historia completa",phase:1,time:"15 o 20 minutos",c:"#85600c",tint:"#f6ead0",
+  line:"Cartas de personaje, conflicto y resolución, con cronómetro, para construir una historia y narrarla en el taller.",
+  steps:["Elegí el modo. En el clásico salen un personaje, un conflicto y una resolución, y hay 15 minutos. El complejo suma una carta especial, que agrega una restricción de forma o un elemento obligatorio, y da 20 minutos.","Sacá las cartas y poné en marcha el cronómetro, que podés alargar o acortar de a cinco minutos.","Cada participante o grupo construye su historia con esas cartas y la narra en voz alta o la escribe.","Al terminar, conversen sobre lo que funcionó y sobre lo que podría ser más específico o más arriesgado."]}
+];
+const TEST={id:"test-lunante",name:"Test lunante",label:"Antes de jugar",savesLabel:"Guarda tus respuestas",phase:0,c:"#e3b44c",bar:"#1a2744",time:"26 preguntas · 7 minutos",saves:true,
+  line:"¿Qué clase de escritor o escritora sos? Un recorrido por tu modo de trabajar, cómo planificás, de dónde te llega la escritura y qué mundos te atraen, para saber por dónde empezar.",
+  steps:["Respondé las veintiséis preguntas tocando la opción que más se parezca a vos. Si te representan las dos, o ninguna, también podés decirlo.","Podés volver a la pregunta anterior, salir y retomar más tarde, porque el test recuerda dónde quedaste.","Al final recibís tu perfil: cómo trabajás, qué forma buscás y de qué materia escribís, dónde caés en cada espectro, lo que más te frena y seis ejercicios pensados para vos.","Copiá el resultado para conservarlo y usalo para elegir por cuál de los juegos empezar."],
+  note:"Tus respuestas quedan guardadas en este navegador y en este dispositivo."};
+const ALL=[TEST,...GAMES];
+const src=g=>g.id+"/index.html";
+const $=id=>document.getElementById(id);
+
+/* Fase lunar creciente: f = fracción iluminada (0 a 1). */
+function moonSVG(f){
+  const r=10, rx=Math.abs(1-2*f)*r;
+  let lit="";
+  if(f>=.999) lit=`<circle r="${r}" fill="var(--moon)"/>`;
+  else if(f>.001) lit=`<path fill="var(--moon)" d="M0,${-r} A${r},${r} 0 0 1 0,${r} A${rx.toFixed(2)},${r} 0 0 ${f<.5?0:1} 0,${-r}Z"/>`;
+  const rim=f<=.001?` stroke="var(--moon)" stroke-width=".9" stroke-opacity=".75"`:"";
+  return `<svg viewBox="-12 -12 24 24" aria-hidden="true"><circle r="${r}" fill="rgba(0,0,0,.28)"${rim}/>${lit}</svg>`;
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function stepsHTML(g){
+  return `<ol class="steps">${g.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>${g.note?`<p class="note">${esc(g.note)}</p>`:""}`;
+}
+
+const card=(g,tag,cls)=>`
+  <${tag} class="game ${cls||""}" style="--c:${g.c};--tint:${g.tint||"#1a2744"}">
+    <span class="moon">${moonSVG(g.phase)}</span>
+    <div class="ghead"><h2>${esc(g.name)}</h2>${g.alt?`<span class="alt">${esc(g.alt)}</span>`:""}</div>
+    <div class="body"><span class="works">${esc(g.label||"Trabaja · "+g.works)}</span><p class="line">${esc(g.line)}</p>
+      ${g.time||g.saves?`<div class="meta">${g.time?`<span class="chip">${esc(g.time)}</span>`:""}${g.saves?`<span class="chip save">${esc(g.savesLabel||"Guarda lo escrito")}</span>`:""}</div>`:""}</div>
+    <div class="acts"><button class="btn" type="button" data-play="${g.id}">${g.id==="test-lunante"?"Hacer el test":"Jugar"}</button>
+      <button class="how" type="button" data-how="${g.id}" aria-expanded="false" aria-controls="steps-${g.id}">Cómo se juega</button></div>
+    <button class="thumb" type="button" data-play="${g.id}" aria-label="${g.id==="test-lunante"?"Hacer el test":"Jugar a "+esc(g.name)}"><img src="miniaturas/${g.id}.webp" alt="" width="720" height="495" loading="lazy"></button>
+    <div class="steps-wrap" id="steps-${g.id}" hidden>${stepsHTML(g)}</div>
+  </${tag}>`;
+$("feature").innerHTML=card(TEST,"section","feature");
+$("list").innerHTML=GAMES.map(g=>card(g,"li")).join("");
+
+/* Navegación: el juego abierto se refleja en el #ancla; incrustada, no agrega pasos al historial. */
+const EMBEDDED=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+const frames={};
+let current=null, hubScroll=0;
+function setHash(id){
+  const url=id?"#"+id:location.pathname+location.search;
+  try{ EMBEDDED?history.replaceState(null,"",url):history.pushState(null,"",url); }catch(e){}
+}
+function show(id,fromHistory){
+  const g=ALL.find(x=>x.id===id);
+  closePop();
+  if(!g){
+    $("player").hidden=true; $("hub").hidden=false; document.title="Juegos Lunantes";
+    window.scrollTo(0,hubScroll);
+    if(current){const b=document.querySelector(`.btn[data-play="${current}"]`);if(b)b.focus({preventScroll:true});}
+    current=null; if(!fromHistory)setHash(null); return;
+  }
+  if(!current)hubScroll=window.scrollY;
+  if(!frames[id]){
+    const f=document.createElement("iframe");
+    f.src=src(g); f.title=g.name; f.setAttribute("allow","clipboard-write; fullscreen");
+    $("frames").appendChild(f); frames[id]=f;
+  }
+  Object.entries(frames).forEach(([k,f])=>f.hidden=k!==id);
+  $("bar").style.setProperty("--c",g.bar||g.c);
+  $("now").innerHTML=moonSVG(g.phase)+`<b>${esc(g.name)}</b>`;
+  $("openNew").href=src(g);
+  $("hub").hidden=true; $("player").hidden=false; document.title=g.name+" · Juegos Lunantes";
+  current=id; if(!fromHistory)setHash(id);
+  frames[id].focus();
+}
+function closePop(){ $("pop").hidden=true; $("howBtn").setAttribute("aria-expanded","false"); }
+
+document.addEventListener("click",e=>{
+  const p=e.target.closest("[data-play]"), h=e.target.closest("[data-how]");
+  if(p){show(p.dataset.play);return;}
+  if(h){const w=$("steps-"+h.dataset.how);w.hidden=!w.hidden;h.setAttribute("aria-expanded",String(!w.hidden));h.textContent=w.hidden?"Cómo se juega":"Ocultar instrucciones";return;}
+  if(e.target.closest(".pop .close")){closePop();$("howBtn").focus();return;}
+});
+$("back").addEventListener("click",()=>show(null));
+$("howBtn").addEventListener("click",()=>{
+  const g=ALL.find(x=>x.id===current); if(!g)return;
+  const pop=$("pop");
+  if(!pop.hidden){closePop();return;}
+  pop.innerHTML=`<button class="close" type="button">Cerrar</button><h3>Cómo se juega</h3>${stepsHTML(g)}`;
+  pop.hidden=false; $("howBtn").setAttribute("aria-expanded","true");
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("pop").hidden){closePop();$("howBtn").focus();} });
+window.addEventListener("popstate",()=>show(location.hash.slice(1)||null,true));
+if(location.hash.length>1) show(location.hash.slice(1),true);
+</script>
+</body>
+</html>
