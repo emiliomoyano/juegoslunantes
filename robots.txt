@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://juegoslunantes.emiliomoyano.org/sitemap.xml
